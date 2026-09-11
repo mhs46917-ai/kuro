@@ -1,0 +1,45 @@
+# 画像から読み取る項目の定義
+# type: text（文字列） / number（数値） / date（日付） / code（記号・番号）
+
+name: 受領書
+description: "読み取り対象の帳票について簡単に説明します（例: 取引先から届く受領書）"
+
+fields:
+  - key: 伝票番号
+    type: code
+    required: true
+    unique: true      # 同じ値が複数あれば重複として指摘する
+    pattern: "^[A-Z]-?\\d{4,6}$"
+    hint: 右上に印字されている番号
+
+  - key: 日付
+    type: date
+    required: true
+    hint: 和暦の場合もそのまま書き写してよい（自動で西暦に変換される）
+
+  - key: 取引先名
+    type: text
+    required: true
+
+  - key: 品名
+    type: text
+    required: true
+
+  - key: 数量
+    type: number
+    required: true
+    min: 0
+
+  - key: 金額
+    type: number
+    required: false
+    min: 0
+
+  - key: 区分
+    type: text
+    required: false
+    choices: [新規, 継続, 返品]
+
+  - key: 備考
+    type: text
+    required: false

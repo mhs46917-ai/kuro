@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>受注処理マニュアル</title>
+<style>
+:root { --ink:#1c1c1c; --muted:#5f6b7a; --line:#d9dee5; --accent:#1f4e79;
+        --warn-bg:#fff4f2; --warn-line:#d1453b; --note-bg:#f1f6fb; --note-line:#1f4e79; }
+* { box-sizing: border-box; }
+body { margin:0; color:var(--ink); background:#f4f5f7;
+       font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+       line-height:1.75; font-size:15px; }
+.sheet { max-width:900px; margin:0 auto; background:#fff; padding:48px 56px;
+         box-shadow:0 1px 3px rgba(0,0,0,.08); }
+h1 { font-size:26px; margin:0 0 8px; letter-spacing:.02em; }
+h2 { font-size:19px; margin:40px 0 12px; padding:8px 12px; background:var(--accent);
+     color:#fff; border-radius:3px; }
+h3 { font-size:16px; margin:24px 0 8px; }
+p { margin:.5em 0; }
+.meta { display:flex; flex-wrap:wrap; gap:6px 24px; color:var(--muted); font-size:13px;
+        border-bottom:2px solid var(--accent); padding-bottom:16px; margin-bottom:8px; }
+.meta b { color:var(--ink); font-weight:600; }
+.block { margin:28px 0; }
+.block > .label { font-weight:600; font-size:14px; color:var(--accent); margin-bottom:4px; }
+table { border-collapse:collapse; width:100%; font-size:14px; margin:8px 0 4px; }
+th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+th { background:#eef2f6; font-weight:600; white-space:nowrap; }
+ol.toc { columns:2; font-size:14px; padding-left:1.4em; }
+ol.toc a { color:var(--ink); text-decoration:none; }
+ol.toc a:hover { text-decoration:underline; }
+.step { border:1px solid var(--line); border-radius:4px; padding:14px 16px; margin:12px 0;
+        page-break-inside:avoid; }
+.step-head { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.step-no { background:var(--accent); color:#fff; font-size:13px; font-weight:700;
+           border-radius:3px; padding:2px 9px; white-space:nowrap; }
+.step-title { font-weight:600; font-size:16px; }
+.tags { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; }
+.tag { font-size:12px; color:var(--muted); border:1px solid var(--line);
+       border-radius:10px; padding:1px 9px; background:#fafbfc; }
+.detail { margin:8px 0 0; }
+.detail ul { margin:.3em 0; padding-left:1.3em; }
+.callout { border-left:4px solid; padding:8px 12px; margin:10px 0; font-size:14px;
+           border-radius:0 3px 3px 0; }
+.callout.note { background:var(--note-bg); border-color:var(--note-line); }
+.callout.warn { background:var(--warn-bg); border-color:var(--warn-line); }
+.callout .label { font-weight:600; margin-right:.4em; }
+.checks { margin:10px 0 0; padding:0; list-style:none; font-size:14px; }
+.checks li { padding-left:1.6em; position:relative; }
+.checks li::before { content:"☐"; position:absolute; left:.2em; color:var(--accent); }
+figure { margin:12px 0 0; }
+figure img { max-width:100%; border:1px solid var(--line); border-radius:3px; }
+figcaption { font-size:12px; color:var(--muted); margin-top:4px; }
+footer { margin-top:48px; padding-top:14px; border-top:1px solid var(--line);
+         font-size:12px; color:var(--muted); }
+@media print {
+  body { background:#fff; font-size:11pt; }
+  .sheet { box-shadow:none; max-width:none; padding:0; }
+  h2 { page-break-after:avoid; }
+  @page { size:A4; margin:18mm 15mm; }
+}
+@media (max-width:640px) { .sheet { padding:24px 18px; } ol.toc { columns:1; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+<h1>受注処理マニュアル</h1><div class="meta"><span><b>文書番号:</b> MN-SL-001</span><span><b>版数:</b> 1.1</span><span><b>所管部署:</b> 営業部 業務課</span><span><b>作成者:</b> 業務課 マニュアル担当</span><span><b>適用開始日:</b> 2026-04-01</span></div><div class="block"><div class="label">目的</div><p>得意先からの注文受付から出荷指示までの受注処理を、担当者が誰であっても同じ品質・同じリードタイムで実施できるようにする。</p></div><div class="block"><div class="label">適用範囲</div><ul><li>対象業務: 国内得意先からの通常受注（返品・特注品を除く）</li><li>対象者: 営業部 業務課の受注担当者および代行者</li><li>対象システム: 販売管理システム、共有フォルダ</li></ul></div><div class="block"><div class="label">用語定義</div><table><thead><tr><th>用語</th><th>説明</th></tr></thead><tbody><tr><td>受注日</td><td>得意先からの注文を当社が正式に受け付けた日。注文書の受領日を指す。</td></tr><tr><td>出荷指示</td><td>倉庫に対して出荷作業の開始を依頼する販売管理システム上の処理。</td></tr><tr><td>与信残</td><td>得意先ごとの与信限度額から未回収債権を差し引いた残額。</td></tr></tbody></table></div><div class="block"><div class="label">改訂履歴</div><table><thead><tr><th>版数</th><th>改訂日</th><th>改訂者</th><th>内容</th></tr></thead><tbody><tr><td>1.0</td><td>2026-01-10</td><td>業務課 マニュアル担当</td><td>初版作成</td></tr><tr><td>1.1</td><td>2026-04-01</td><td>業務課 マニュアル担当</td><td>与信確認の手順を追加、出荷締め時刻を15:00に変更</td></tr></tbody></table></div><div class="block"><div class="label">目次</div><ol class="toc"><li><a href="#sec1">事前準備</a></li><li><a href="#sec2">受注入力</a></li><li><a href="#sec3">出荷指示と保管</a></li></ol></div><h2 id="sec1">1. 事前準備</h2><p>受注処理を始める前に、その日の処理に必要な情報と権限を揃える。</p><div class="step"><div class="step-head"><span class="step-no">1-1</span><span class="step-title">販売管理システムにログインする</span><span class="tags"><span class="tag">担当: 受注担当者</span><span class="tag">システム: 販売管理システム</span><span class="tag">所要: 1分</span></span></div><div class="detail"><ul><li>社内ポータルの「販売管理システム」リンクを開く</li><li>社員番号とパスワードでログインする</li><li>メニューから「受注入力」を選択する</li></ul></div><div class="callout note"><span class="label">補足</span>パスワードの有効期限は90日。期限が近い場合は先に変更しておく。</div><ul class="checks"><li>受注入力画面が表示されていること</li></ul></div><div class="step"><div class="step-head"><span class="step-no">1-2</span><span class="step-title">当日の注文書を回収する</span><span class="tags"><span class="tag">担当: 受注担当者</span><span class="tag">所要: 10分</span></span></div><div class="detail"><p>注文書は次の3経路で届く。すべての経路を確認して漏れを防ぐ。</p><ul><li>受注専用メールボックス</li><li>FAX受信トレイ（複合機の共有フォルダ）</li><li>営業担当者からの直接持ち込み</li></ul></div><div class="callout warn"><span class="label">注意</span>15:00 以降に届いた注文書は翌営業日扱いとなる。受領時刻を必ず記録すること。</div><ul class="checks"><li>3経路すべてを確認したこと</li><li>注文書に受領日時を記入したこと</li></ul></div><h2 id="sec2">2. 受注入力</h2><p>注文書の内容を販売管理システムに登録する。</p><div class="step"><div class="step-head"><span class="step-no">2-1</span><span class="step-title">得意先コードと与信を確認する</span><span class="tags"><span class="tag">担当: 受注担当者</span><span class="tag">システム: 販売管理システム</span></span></div><div class="detail"><ul><li>「得意先照会」で得意先コードを検索する</li><li>与信残が注文金額を上回っていることを確認する</li></ul></div><div class="callout warn"><span class="label">注意</span>与信残が不足している場合は入力を進めず、営業部長へ確認を依頼する。
+独断での受注登録は行わない。
+</div><ul class="checks"><li>得意先コードが注文書の宛先と一致していること</li><li>与信残 ≧ 注文金額であること</li></ul></div><div class="step"><div class="step-head"><span class="step-no">2-2</span><span class="step-title">明細を入力する</span><span class="tags"><span class="tag">担当: 受注担当者</span><span class="tag">システム: 販売管理システム</span><span class="tag">所要: 1件あたり3分</span></span></div><div class="detail"><ul><li>商品コード、数量、単価、希望納期を注文書どおりに入力する</li><li>単価が価格マスタと異なる場合は「特価理由」を必ず記入する</li><li>入力後、合計金額が注文書と一致することを確認する</li></ul></div><div class="callout note"><span class="label">補足</span>商品コードが不明な場合は商品マスタの「品名検索」から特定できる。</div><ul class="checks"><li>合計金額が注文書と一致していること</li><li>希望納期が入力されていること</li></ul></div><div class="step"><div class="step-head"><span class="step-no">2-3</span><span class="step-title">入力内容をダブルチェックする</span><span class="tags"><span class="tag">担当: 受注担当者 → 業務課リーダー</span></span></div><div class="detail"><p>入力完了後、受注一覧を印刷し、注文書と突き合わせてリーダーの確認を受ける。金額 100万円以上の受注は課長確認も必要。</p></div><ul class="checks"><li>リーダーの確認印があること</li><li>100万円以上の場合は課長確認があること</li></ul></div><h2 id="sec3">3. 出荷指示と保管</h2><div class="step"><div class="step-head"><span class="step-no">3-1</span><span class="step-title">出荷指示を登録する</span><span class="tags"><span class="tag">担当: 受注担当者</span><span class="tag">システム: 販売管理システム</span></span></div><div class="detail"><ul><li>「出荷指示」画面で対象受注を選択する</li><li>出荷予定日を確認し、登録ボタンを押す</li></ul></div><div class="callout warn"><span class="label">注意</span>当日出荷の締め時刻は 15:00。締め後の登録は翌営業日の出荷になる。</div><ul class="checks"><li>出荷指示番号が発行されたこと</li></ul></div><div class="step"><div class="step-head"><span class="step-no">3-2</span><span class="step-title">注文書を保管する</span><span class="tags"><span class="tag">担当: 受注担当者</span></span></div><div class="detail"><ul><li>注文書に受注番号を記入する</li><li>月別ファイルに綴じ、共有キャビネットへ保管する</li><li>電子データは共有フォルダの「受注/YYYY年度/MM月」へ保存する</li></ul></div><div class="callout note"><span class="label">補足</span>保管期間は7年（国税関係書類）。</div></div><h2 id="faq">よくある質問</h2><table><thead><tr><th>質問</th><th>回答</th></tr></thead><tbody><tr><td>注文書の記載内容に不明点がある場合は？</td><td>推測で入力せず、営業担当者経由で得意先に確認する。確認内容は注文書の余白に記録する。</td></tr><tr><td>入力後に得意先から数量変更の連絡があった場合は？</td><td>出荷指示前であれば受注訂正で対応する。出荷指示後は倉庫へ連絡のうえ、出荷指示取消から再登録する。</td></tr><tr><td>システム障害で入力できない場合は？</td><td>注文書を時系列に並べて受付順を保全し、復旧後にまとめて入力する。復旧見込みは情報システム課へ確認する。</td></tr></tbody></table><h2 id="contacts">問い合わせ先</h2><table><thead><tr><th>担当</th><th>内容</th><th>連絡先</th></tr></thead><tbody><tr><td>営業部 業務課</td><td>受注処理全般・本マニュアルの内容</td><td>内線 1234</td></tr><tr><td>情報システム課</td><td>販売管理システムの障害・権限</td><td>内線 5678</td></tr><tr><td>物流センター</td><td>出荷・納期の調整</td><td>内線 9012</td></tr></tbody></table><footer>受注処理マニュアル / 版数 1.1 / 出力日 2026-09-11</footer>
+</div>
+</body>
+</html>

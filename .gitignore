@@ -1,0 +1,12 @@
+# ツールの出力先（実データが入るため追跡しない）
+output/
+
+# 実業務のデータ（誤コミット防止）
+data/
+*.xlsx
+*.xls
+*.csv
+
+__pycache__/
+*.pyc
+.DS_Store
