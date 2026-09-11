@@ -13,3 +13,4 @@
 | 2026-09-11 | 職歴シリーズの構成づくりに着手 | ジム再建の体験（箇条書き） | note/articles/shokureki-series/OUTLINE.md | 進行中（要ヒアリング） |
 | 2026-09-11 | 職歴シリーズ: 事実関係を訂正し構成を改訂 | ヒアリング回答 | shokureki-series/OUTLINE.md | 進行中（Part 1素材待ち） |
 | 2026-09-11 | 職歴シリーズ Part 1 の下書き作成、5話構成に改訂 | ヒアリング回答 | shokureki-series/PART1.md | 下書き（★素材待ち1か所） |
+| 2026-09-11 | 職歴シリーズ Part 1 を仕上げ（1年目の数字・危機感の差を追加） | ヒアリング回答 | shokureki-series/PART1.md | 下書き完成 |
