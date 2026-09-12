@@ -125,12 +125,38 @@ python3 tools/image_to_data.py build --fields fields/受領書.yaml data.json
 
 ---
 
+## 付録: 依頼管理テンプレート（Notion）
+
+日々の依頼を「依頼先 / 納期 / 内容 / 進捗 / 備考」で管理するためのテンプレートです。
+Slack を無料プランで使っている場合、メッセージ履歴が90日で見えなくなるため、
+**依頼の記録は Notion 側に残す**ことを前提にしています。
+
+- [`notion/依頼管理_テンプレート.csv`](notion/依頼管理_テンプレート.csv) — Notion に取り込む CSV（サンプル6件入り）
+- [`manuals/依頼管理_Notion設定手順.yaml`](manuals/依頼管理_Notion設定手順.yaml) — 設定手順書の定義
+- [`samples/依頼管理_Notion設定手順.html`](samples/依頼管理_Notion設定手順.html) — 生成済みの設定手順書
+
+取り込み手順、プロパティの型設定、ビューの作り方、日々の運用ルールは設定手順書を参照してください。
+手順書は次のコマンドで再生成できます。
+
+```bash
+python3 tools/manual_build.py manuals/依頼管理_Notion設定手順.yaml
+```
+
+運用したデータは Notion から CSV でエクスポートし、そのまま分析にかけられます。
+
+```bash
+python3 tools/excel_analyze.py 依頼管理.csv --groupby 依頼先 --date 受領日
+```
+
+---
+
 ## ディレクトリ構成
 
 ```
 tools/     ツール本体（common.py は日本語表記ゆれの正規化を担う共通処理）
 manuals/   マニュアルの定義ファイル(YAML)
 fields/    画像読み取りの項目定義(YAML)
+notion/    Notion 取り込み用テンプレート(CSV)
 samples/   動作確認用のサンプルデータと出力例
 output/    生成物の出力先（git 管理外）
 ```

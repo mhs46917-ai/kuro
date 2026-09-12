@@ -7,6 +7,9 @@ data/
 *.xls
 *.csv
 
+# ただし配布用テンプレートは追跡する
+!notion/*.csv
+
 __pycache__/
 *.pyc
 .DS_Store
