@@ -9,6 +9,8 @@ note/
   STYLE.md        文体・トンマナのルール（最重要。ここを更新すると全記事に効く）
   MONETIZATION.md 公開範囲（無料/有料）の方針。個人特定リスクの扱いもここ
   CONTENT_PLAN.md 連載・有料記事・ストックアイデアの一覧
+  ANALYTICS.md    数字の記録。次回はここと比較する
+  LINKS.md        記事間リンクの貼り方と、貼るテキスト
   TEMPLATE.md     記事の基本雛形
   CHECKLIST.md    公開前チェックリスト
   templates/      型別の雛形（ハウツー／体験談／リスト／考察）
