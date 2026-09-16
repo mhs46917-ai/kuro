@@ -38,3 +38,4 @@
 | 2026-09-16 | 連載完結時点の数字を分析・記録 | noteダッシュボード | note/ANALYTICS.md | 完了 |
 | 2026-09-16 | 運用スケジュールを決定・記録、Part 5 タイトル確定 | 数字の分析 | note/CONTENT_PLAN.md | 完了 |
 | 2026-09-16 | 組織あるある観察記 #1 の骨格作成 | — | note/articles/aruaru/01-kazetoshi.md | 骨格（★素材待ち） |
+| 2026-09-16 | 短編の型を作成、あるある観察記 #1 を下書き | — | templates/06-aruaru.md / aruaru/01 | 下書き |
