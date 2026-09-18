@@ -30,7 +30,7 @@ import os
 import sys
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from scipy import ndimage
 
 # LINE Creators Market の提出規定
@@ -204,6 +204,37 @@ def fit_canvas(rgba, size, margin):
     return canvas
 
 
+TEXT_RGB = (74, 55, 40)       # #4A3728 輪郭線と同系の濃い茶
+TEXT_STROKE_RGB = (255, 255, 255)
+
+
+def fit_font(texts, font_path, max_w, max_h):
+    """すべてのセリフが帯に収まる最大の字送りを二分探索で決める。
+
+    コマごとに最適化すると文字の大きさがばらつき、セット全体の統一感が崩れる。
+    一番長いセリフに合わせて全コマで同じ字送りを使う。
+    """
+    lo, hi, best = 8, max_h, None
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        font = ImageFont.truetype(font_path, mid)
+        boxes = [font.getbbox(t) for t in texts]
+        if all(r - l <= max_w and b - t <= max_h for l, t, r, b in boxes):
+            best, lo = font, mid + 1
+        else:
+            hi = mid - 1
+    return best or ImageFont.truetype(font_path, 8)
+
+
+def draw_label(canvas, text, font, band_h, stroke):
+    """コマ下部の帯にセリフを描く。白フチを付けて背景から浮かせる。"""
+    w, h = canvas.size
+    d = ImageDraw.Draw(canvas)
+    d.text((w // 2, h - band_h // 2), text, font=font, fill=TEXT_RGB + (255,),
+           anchor="mm", stroke_width=stroke, stroke_fill=TEXT_STROKE_RGB + (255,))
+    return canvas
+
+
 def process(panel, args):
     panel = inset(panel, args.inset)
     panel = crop_text_band(panel, args.crop_top)
@@ -223,6 +254,12 @@ def process(panel, args):
     if args.outline_width > 0 or args.glow_alpha > 0:
         rgba = add_outline(rgba, args.outline_width, OUTLINE_RGB, args.outline_alpha,
                            GLOW_RGB, args.glow_alpha, args.glow_blur)
+    if args.text_band > 0:
+        # 文字帯のぶんキャラを上に寄せ、下に余白を確保する
+        art = fit_canvas(rgba, (STICKER_W, STICKER_H - args.text_band), args.margin)
+        canvas = Image.new("RGBA", (STICKER_W, STICKER_H), (0, 0, 0, 0))
+        canvas.paste(art, (0, 0), art)
+        return canvas
     return fit_canvas(rgba, (STICKER_W, STICKER_H), args.margin)
 
 
@@ -231,6 +268,15 @@ def main():
     p.add_argument("inputs", nargs="+", help="入力画像（グリッド1枚でも個別複数枚でも可）")
     p.add_argument("-o", "--outdir", default="line_out", help="出力先ディレクトリ")
     p.add_argument("--grid", help="入力がグリッド画像のときの分割数（例: 3x3）")
+    p.add_argument("--select",
+                   help="使うコマを1始まりの番号で指定し、この順に書き出す（例: 1,2,3,4,5,7,8,9）")
+    p.add_argument("--text-band", type=int, default=0,
+                   help="コマ下部にセリフ用の帯を確保する高さ(px)。0で無効")
+    p.add_argument("--labels", help="各コマのセリフをカンマ区切りで指定（--text-band と併用）")
+    p.add_argument("--font", default="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+                   help="セリフに使うフォントのパス")
+    p.add_argument("--main-index", type=int, default=1,
+                   help="main.png / tab.png に使うコマの番号（--select 適用後の順番）")
     p.add_argument("--inset", type=float, default=0.012,
                    help="コマの四辺を内側に詰める割合。グリッドの区切り線対策")
     p.add_argument("--crop-top", type=float, default=0.0,
@@ -276,18 +322,37 @@ def main():
         else:
             panels.append(img)
 
+    if args.select:
+        wanted = [int(v) for v in args.select.replace(" ", "").split(",")]
+        bad = [i for i in wanted if not 1 <= i <= len(panels)]
+        if bad:
+            sys.exit(f"--select の範囲外です: {bad}（入力は{len(panels)}コマ）")
+        panels = [panels[i - 1] for i in wanted]
+
     os.makedirs(args.outdir, exist_ok=True)
     results = []
+    labels = [v.strip() for v in args.labels.split(",")] if args.labels else []
+    label_font = stroke_w = None
+    if labels and args.text_band > 0:
+        stroke_w = max(2, args.text_band // 14)
+        label_font = fit_font([t for t in labels if t], args.font,
+                              STICKER_W - 24, args.text_band - stroke_w * 2 - 6)
+
+    covers = []
     for i, panel in enumerate(panels, 1):
         out = process(panel, args)
+        covers.append(out.copy())  # main/tab は文字なしで作る（タブは96x74で文字が潰れる）
+        if label_font and i <= len(labels) and labels[i - 1]:
+            out = draw_label(out, labels[i - 1], label_font, args.text_band, stroke_w)
         name = os.path.join(args.outdir, f"{i:02d}.png")
         out.save(name)
         results.append(out)
         print(f"  {name}  {out.size[0]}x{out.size[1]}")
 
     if results:
-        fit_canvas(results[0], MAIN_SIZE, 6).save(os.path.join(args.outdir, "main.png"))
-        fit_canvas(results[0], TAB_SIZE, 4).save(os.path.join(args.outdir, "tab.png"))
+        cover = covers[min(max(args.main_index, 1), len(covers)) - 1]
+        fit_canvas(cover, MAIN_SIZE, 6).save(os.path.join(args.outdir, "main.png"))
+        fit_canvas(cover, TAB_SIZE, 4).save(os.path.join(args.outdir, "tab.png"))
         print(f"  {args.outdir}/main.png  240x240")
         print(f"  {args.outdir}/tab.png   96x74")
 
