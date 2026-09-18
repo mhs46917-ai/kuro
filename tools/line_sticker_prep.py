@@ -101,7 +101,35 @@ def remove_background(panel, tol):
     border.discard(0)
     background = np.isin(lab, list(border)) if border else np.zeros_like(bg_like)
 
-    return ~background
+    return ~background, bg_color
+
+
+def drop_bg_tint(panel, mask, bg_color, strength):
+    """背景と同じ色味を帯びた画素をマスクから外す。接地影の除去用。
+
+    影は「背景色を暗くしたもの」なので、無彩色からのズレの向きが背景と揃う。
+    一方、ほお紅は逆向き、白い体はほぼ無彩色、青いナイトキャップは別の向きに
+    なるため、向きの一致だけを見れば影だけを選んで落とせる。
+    """
+    if strength <= 0:
+        return mask
+    a = np.asarray(panel.convert("RGB")).astype(np.float32)
+
+    def chroma(x):
+        return x - x.mean(axis=-1, keepdims=True)
+
+    bg_c = chroma(np.asarray(bg_color, dtype=np.float32))
+    bg_norm = np.linalg.norm(bg_c)
+    if bg_norm < 1e-3:
+        return mask  # 背景が無彩色なら判定できない
+
+    px_c = chroma(a)
+    px_norm = np.linalg.norm(px_c, axis=-1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        cos = (px_c @ (bg_c / bg_norm)) / np.maximum(px_norm, 1e-6)
+
+    tinted = (cos > 0.75) & (px_norm > strength)
+    return mask & ~tinted
 
 
 def drop_blue(panel, mask, threshold):
@@ -179,7 +207,8 @@ def fit_canvas(rgba, size, margin):
 def process(panel, args):
     panel = inset(panel, args.inset)
     panel = crop_text_band(panel, args.crop_top)
-    mask = remove_background(panel, args.tolerance)
+    mask, bg_color = remove_background(panel, args.tolerance)
+    mask = drop_bg_tint(panel, mask, bg_color, args.drop_shadow)
     if args.drop_blue > 0:
         mask = drop_blue(panel, mask, args.drop_blue)
     if not args.keep_all:
@@ -212,7 +241,9 @@ def main():
     p.add_argument("--tolerance", type=float, default=40.0,
                    help="背景色とみなす色距離。背景が残るなら上げ、キャラが欠けるなら下げる")
     p.add_argument("--margin", type=int, default=MARGIN, help="確保する安全余白(px)")
-    p.add_argument("--drop-blue", type=int, default=18,
+    p.add_argument("--drop-shadow", type=float, default=6.0,
+                   help="背景と同じ色味の画素を落とす強さ。接地影の除去用。0で無効")
+    p.add_argument("--drop-blue", type=int, default=0,
                    help="青が突出した画素を落とす閾値(B-R)。接地影の除去用。"
                         "意図して青いパーツがある絵では 0 にする")
     p.add_argument("--outline-width", type=int, default=3, help="縁取りの太さ(px)。0で無効")
