@@ -55,6 +55,26 @@ def split_grid(img, cols, rows):
             yield img.crop((int(c * cw), int(r * ch), int((c + 1) * cw), int((r + 1) * ch)))
 
 
+def crop_text_band(panel, frac):
+    """コマ上部の文字帯を切り落とす。
+
+    孤立パーツの除去だけに頼ると、焼き込まれた文字と一緒に電球や汗などの小物まで
+    消えてしまう。文字が常に上部にあるレイアウトでは、先に帯ごと落として
+    --keep-all を併用したほうが小物を残せる。
+    """
+    if frac <= 0:
+        return panel
+    return panel.crop((0, int(panel.height * frac), panel.width, panel.height))
+
+
+def inset(panel, frac):
+    """コマの四辺を少し内側に詰める。グリッドの区切り線の残りを落とすため。"""
+    if frac <= 0:
+        return panel
+    dx, dy = int(panel.width * frac), int(panel.height * frac)
+    return panel.crop((dx, dy, panel.width - dx, panel.height - dy))
+
+
 def remove_background(panel, tol):
     """縁から連結している背景色の領域だけを透過する。
 
@@ -157,6 +177,8 @@ def fit_canvas(rgba, size, margin):
 
 
 def process(panel, args):
+    panel = inset(panel, args.inset)
+    panel = crop_text_band(panel, args.crop_top)
     mask = remove_background(panel, args.tolerance)
     if args.drop_blue > 0:
         mask = drop_blue(panel, mask, args.drop_blue)
@@ -180,6 +202,13 @@ def main():
     p.add_argument("inputs", nargs="+", help="入力画像（グリッド1枚でも個別複数枚でも可）")
     p.add_argument("-o", "--outdir", default="line_out", help="出力先ディレクトリ")
     p.add_argument("--grid", help="入力がグリッド画像のときの分割数（例: 3x3）")
+    p.add_argument("--inset", type=float, default=0.012,
+                   help="コマの四辺を内側に詰める割合。グリッドの区切り線対策")
+    p.add_argument("--crop-top", type=float, default=0.0,
+                   help="コマ上部を切り落とす割合(0-1)。焼き込まれた文字帯の除去用。"
+                        "--keep-all と併用すると電球や汗などの小物を残せる")
+    p.add_argument("--upscale", type=float, default=1.0,
+                   help="分割前に入力を拡大する倍率。1コマが370x320に足りないときに使う")
     p.add_argument("--tolerance", type=float, default=40.0,
                    help="背景色とみなす色距離。背景が残るなら上げ、キャラが欠けるなら下げる")
     p.add_argument("--margin", type=int, default=MARGIN, help="確保する安全余白(px)")
@@ -207,6 +236,9 @@ def main():
         if not os.path.exists(path):
             sys.exit(f"見つかりません: {path}")
         img = Image.open(path)
+        if args.upscale != 1.0:
+            img = img.resize((round(img.width * args.upscale),
+                              round(img.height * args.upscale)), Image.LANCZOS)
         if args.grid:
             cols, rows = (int(v) for v in args.grid.lower().split("x"))
             panels.extend(split_grid(img, cols, rows))
