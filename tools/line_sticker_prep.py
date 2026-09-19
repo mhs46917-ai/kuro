@@ -305,6 +305,8 @@ def main():
     p.add_argument("--text-band", type=int, default=0,
                    help="コマ下部にセリフ用の帯を確保する高さ(px)。0で無効")
     p.add_argument("--labels", help="各コマのセリフをカンマ区切りで指定（--text-band と併用）")
+    p.add_argument("--text-stroke", type=int, default=-1,
+                   help="セリフの白フチの太さ(px)。0で無し。省略すると帯の高さから自動")
     p.add_argument("--text-bold", type=int, default=0,
                    help="セリフを太らせる量(px)。太字の日本語フォントが無い環境向け。"
                         "デカ文字のセットでは3〜6程度")
@@ -369,11 +371,13 @@ def main():
     labels = [v.strip() for v in args.labels.split(",")] if args.labels else []
     label_font = stroke_w = None
     if labels and args.text_band > 0:
-        stroke_w = max(2, args.text_band // 14)
-        pad = args.text_bold * 2  # 太らせた分だけ収まる箱を小さくする
+        stroke_w = (max(2, args.text_band // 14) if args.text_stroke < 0
+                    else args.text_stroke)
+        # 太らせた分と白フチの分だけ、収まる箱を小さくする
+        pad = args.text_bold * 2 + stroke_w * 2
         label_font = fit_font([t for t in labels if t], args.font,
-                              STICKER_W - 24 - pad,
-                              args.text_band - stroke_w * 2 - pad - 6)
+                              STICKER_W - 12 - pad,
+                              args.text_band - pad - 6)
 
     covers = []
     for i, panel in enumerate(panels, 1):
