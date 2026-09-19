@@ -2,895 +2,1325 @@
 
 「わかる」「たしかに」「なるほど」に全振りした共感特化セット。会話のテンポを作るので連打で使われます。
 
-## 使い方
+## 作り方
 
 1. Gemini に `reference/character.png` を添付する
-2. 下の各プロンプトを1つずつ貼って生成する（1枚ずつ作るのが一番ブレません）
-3. 気に入った画像を `work/raw/C-01.png` 〜 `work/raw/C-16.png` の名前で保存する（番号が並び順になります）
-4. `python3 scripts/stickerkit.py cutout --set C` → `text --set C` → `package --set C` でZIPまで作る
+2. 下の「シート1」のプロンプトを貼って3×3の一覧画像を出す
+3. できた画像を `work/sheets/C-sheet1.png` として保存する
+4. 一覧画像を1コマずつに切り分ける
 
-## 共通スタイル（各プロンプトに含まれています）
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
+```bash
+python3 scripts/stickerkit.py split --sheet work/sheets/C-sheet1.png \
+    --set C --grid 3x3 --start 1
 ```
+
+5. 残りのシートも同じように（`--start` の数字を変える）
+6. 崩れたコマだけ、下の「1枚ずつ描き直す用」で描き直して `work/raw/C-xx.png` を上書きする
+7. `cutout --set C` → `text --set C` → `package --set C`
 
 ---
 
-## C-01　「わかる」
+## シート1（C-01 〜 C-09／9コマ）
 
-- ポーズ: 目を細めてしみじみうなずく。片前足をそっと胸に当てる。
-- 保存ファイル名: `work/raw/C-01.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
+- 保存先: `work/sheets/C-sheet1.png`
+- 切り分け: `python3 scripts/stickerkit.py split --sheet work/sheets/C-sheet1.png --set C --grid 3x3 --start 1`
 
 ```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
+【必ず守ること】
+・9個を3×3のグリッド一覧画像にし、左上から右下へこの順で配置する
+・必ず全身を描く。体の一部がコマの外で切れないようにする
+・コマとコマの間に枠線・区切り線・番号を描かない
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
+・小物（湯のみ・カバン・財布など）は淡い色で小さく、キャラクターの顔に重ならないように描く
 
-【今回のポーズ・表情】
+【ポーズ】
+・「わかる」… 目を細めてしみじみうなずく。片前足をそっと胸に当てる。
+・「めっちゃわかる」… 前のめりになって何度も激しくうなずく。動きの残像線、目がきらり。
+・「たしかに」… 両前足をポンと打ち合わせる。目を見開いた納得顔。
+・「なるほど〜」… 前足をあごに当てて感心。頭の上に小さな電球がぽっと灯る。
+・「それな」… 前足をビシッとこちらに向けて指さす。ノリノリの笑顔。
+・「だよねー」… 首をかしげてにっこり、片前足を軽く上げて同意する。
+・「うんうん」… 目を閉じて何度もうなずく。頭の動きを表す小さな残像線を上下に。
+・「ほんとそれ」… 両前足をぐっと握って力説する。目を輝かせた熱い表情。
+・「わかりみが深い」… 目を閉じて前足を組み、深く大きくうなずく。頭の上に小さな「…！」。
+
+背景は淡いミントグリーンの単色。正方形。できるだけ高解像度で出力してください。
+```
+
+<details><summary>English version</summary>
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Lay out 9 illustrations as a 3 x 3 grid sheet, in this order from top-left to bottom-right
+- Always draw the full body; never let any part be cut off by the edge of its cell
+- No panel borders, dividing lines or numbers between the cells
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere. Do not write any of the words used below
+- Keep props small and pale so they never cover the character
+
+POSES:
+- "わかる" ... nodding slowly with narrowed knowing eyes, one paw resting on its chest
+- "めっちゃわかる" ... leaning forward nodding vigorously, motion after-image lines, eyes glinting
+- "たしかに" ... clapping both front paws together, wide-open eyes, convinced expression
+- "なるほど〜" ... paw on chin, impressed look, a small light bulb glowing above the head
+- "それな" ... pointing a paw straight at the viewer, hyped grinning face
+- "だよねー" ... head tilted with a warm smile, one paw raised lightly in agreement
+- "うんうん" ... nodding repeatedly with eyes closed, small motion lines showing the head bobbing
+- "ほんとそれ" ... clenching both front paws while passionately agreeing, fired-up shining eyes
+- "わかりみが深い" ... eyes closed with front paws folded, nodding deeply, a small ellipsis-exclamation above
+
+Background: a flat pale mint green, flat. Square canvas. Output at the highest resolution available.
+```
+
+</details>
+
+| コマ | セリフ | ファイル名 |
+|---|---|---|
+| 1 | わかる | `C-01.png` |
+| 2 | めっちゃわかる | `C-02.png` |
+| 3 | たしかに | `C-03.png` |
+| 4 | なるほど〜 | `C-04.png` |
+| 5 | それな | `C-05.png` |
+| 6 | だよねー | `C-06.png` |
+| 7 | うんうん | `C-07.png` |
+| 8 | ほんとそれ | `C-08.png` |
+| 9 | わかりみが深い | `C-09.png` |
+
+---
+
+## シート2（C-10 〜 C-16／7コマ）
+
+- 保存先: `work/sheets/C-sheet2.png`
+- 切り分け: `python3 scripts/stickerkit.py split --sheet work/sheets/C-sheet2.png --set C --grid 3x3 --start 10`
+- このシートは7コマだけで、右下の2コマは空にします
+
+```text
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
+
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
+
+【必ず守ること】
+・7個を3×3のグリッド一覧画像にし、左上から右下へこの順で配置する
+・右下の2コマは何も描かず、背景色のまま空けておく
+・必ず全身を描く。体の一部がコマの外で切れないようにする
+・コマとコマの間に枠線・区切り線・番号を描かない
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
+・小物（湯のみ・カバン・財布など）は淡い色で小さく、キャラクターの顔に重ならないように描く
+
+【ポーズ】
+・「そっかー」… 少し眉を下げてやわらかく微笑み、首をかしげる。
+・「ふむふむ」… 丸い眼鏡をかけて小さなメモを見つめる。真剣な表情。
+・「わたしも！」… 片前足で自分を指さして目を大きく見開く。うれしそうな笑顔。
+・「つらかったね」… 前足をそっと差し出して寄り添う。眉を下げたやさしい目。
+・「がんばったね」… 小さなタオルを両前足で持って差し出す。あたたかい笑顔。
+・「えらい！」… 両前足で拍手する。目をキラキラさせ、まわりに星が飛ぶ。
+・「気持ちわかるよ」… 目を閉じて、そっと抱きしめるように両前足を広げる。まわりにふんわりハート。
+
+背景は淡いミントグリーンの単色。正方形。できるだけ高解像度で出力してください。
+```
+
+<details><summary>English version</summary>
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Lay out 7 illustrations as a 3 x 3 grid sheet, in this order from top-left to bottom-right
+- Leave the last 2 cells at the bottom right empty, background color only
+- Always draw the full body; never let any part be cut off by the edge of its cell
+- No panel borders, dividing lines or numbers between the cells
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere. Do not write any of the words used below
+- Keep props small and pale so they never cover the character
+
+POSES:
+- "そっかー" ... eyebrows slightly lowered, soft gentle smile, head tilted
+- "ふむふむ" ... wearing round glasses, studying a small notepad, focused expression
+- "わたしも！" ... pointing at itself with one paw, eyes wide open, delighted smile
+- "つらかったね" ... gently reaching out one paw in comfort, lowered brows, tender caring eyes
+- "がんばったね" ... holding out a small towel with both paws, warm approving smile
+- "えらい！" ... applauding with both front paws, sparkling eyes, stars bursting around
+- "気持ちわかるよ" ... eyes closed, both front paws opened wide for a gentle hug, soft hearts floating around
+
+Background: a flat pale mint green, flat. Square canvas. Output at the highest resolution available.
+```
+
+</details>
+
+| コマ | セリフ | ファイル名 |
+|---|---|---|
+| 1 | そっかー | `C-10.png` |
+| 2 | ふむふむ | `C-11.png` |
+| 3 | わたしも！ | `C-12.png` |
+| 4 | つらかったね | `C-13.png` |
+| 5 | がんばったね | `C-14.png` |
+| 6 | えらい！ | `C-15.png` |
+| 7 | 気持ちわかるよ | `C-16.png` |
+
+---
+
+## 1枚ずつ描き直す用
+
+グリッドで崩れたコマだけ、これで単体生成して差し替えてください。
+
+<details><summary><b>C-01「わかる」</b> … 目を細めてしみじみうなずく。片前足をそっと胸に当てる。</summary>
+
+```text
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
+
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
+
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
+
+【ポーズ】
 目を細めてしみじみうなずく。片前足をそっと胸に当てる。
 
-（※このスタンプに乗せる予定のセリフは「わかる」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: nodding slowly with narrowed knowing eyes, one paw resting on its chest
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-02「めっちゃわかる」</b> … 前のめりになって何度も激しくうなずく。動きの残像線、目がきらり。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: nodding slowly with narrowed knowing eyes, one paw resting on its chest.
-(This sticker will later carry the Japanese caption "わかる" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-02　「めっちゃわかる」
-
-- ポーズ: 前のめりになって何度も激しくうなずく。動きの残像線、目がきらり。
-- 保存ファイル名: `work/raw/C-02.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 前のめりになって何度も激しくうなずく。動きの残像線、目がきらり。
 
-（※このスタンプに乗せる予定のセリフは「めっちゃわかる」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: leaning forward nodding vigorously, motion after-image lines, eyes glinting
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-03「たしかに」</b> … 両前足をポンと打ち合わせる。目を見開いた納得顔。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: leaning forward nodding vigorously, motion after-image lines, eyes glinting.
-(This sticker will later carry the Japanese caption "めっちゃわかる" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-03　「たしかに」
-
-- ポーズ: 両前足をポンと打ち合わせる。目を見開いた納得顔。
-- 保存ファイル名: `work/raw/C-03.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 両前足をポンと打ち合わせる。目を見開いた納得顔。
 
-（※このスタンプに乗せる予定のセリフは「たしかに」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: clapping both front paws together, wide-open eyes, convinced expression
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-04「なるほど〜」</b> … 前足をあごに当てて感心。頭の上に小さな電球がぽっと灯る。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: clapping both front paws together, wide-open eyes, convinced expression.
-(This sticker will later carry the Japanese caption "たしかに" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-04　「なるほど〜」
-
-- ポーズ: 前足をあごに当てて感心。頭の上に小さな電球がぽっと灯る。
-- 保存ファイル名: `work/raw/C-04.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 前足をあごに当てて感心。頭の上に小さな電球がぽっと灯る。
 
-（※このスタンプに乗せる予定のセリフは「なるほど〜」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: paw on chin, impressed look, a small light bulb glowing above the head
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-05「それな」</b> … 前足をビシッとこちらに向けて指さす。ノリノリの笑顔。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: paw on chin, impressed look, a small light bulb glowing above the head.
-(This sticker will later carry the Japanese caption "なるほど〜" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-05　「それな」
-
-- ポーズ: 前足をビシッとこちらに向けて指さす。ノリノリの笑顔。
-- 保存ファイル名: `work/raw/C-05.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 前足をビシッとこちらに向けて指さす。ノリノリの笑顔。
 
-（※このスタンプに乗せる予定のセリフは「それな」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: pointing a paw straight at the viewer, hyped grinning face
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-06「だよねー」</b> … 首をかしげてにっこり、片前足を軽く上げて同意する。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: pointing a paw straight at the viewer, hyped grinning face.
-(This sticker will later carry the Japanese caption "それな" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-06　「だよねー」
-
-- ポーズ: 首をかしげてにっこり、片前足を軽く上げて同意する。
-- 保存ファイル名: `work/raw/C-06.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 首をかしげてにっこり、片前足を軽く上げて同意する。
 
-（※このスタンプに乗せる予定のセリフは「だよねー」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: head tilted with a warm smile, one paw raised lightly in agreement
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-07「うんうん」</b> … 目を閉じて何度もうなずく。頭の動きを表す小さな残像線を上下に。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: head tilted with a warm smile, one paw raised lightly in agreement.
-(This sticker will later carry the Japanese caption "だよねー" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-07　「うんうん」
-
-- ポーズ: 目を閉じて何度もうなずく。頭の動きを表す小さな残像線を上下に。
-- 保存ファイル名: `work/raw/C-07.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 目を閉じて何度もうなずく。頭の動きを表す小さな残像線を上下に。
 
-（※このスタンプに乗せる予定のセリフは「うんうん」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: nodding repeatedly with eyes closed, small motion lines showing the head bobbing
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-08「ほんとそれ」</b> … 両前足をぐっと握って力説する。目を輝かせた熱い表情。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: nodding repeatedly with eyes closed, small motion lines showing the head bobbing.
-(This sticker will later carry the Japanese caption "うんうん" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-08　「ほんとそれ」
-
-- ポーズ: 両前足をぐっと握って力説する。目を輝かせた熱い表情。
-- 保存ファイル名: `work/raw/C-08.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 両前足をぐっと握って力説する。目を輝かせた熱い表情。
 
-（※このスタンプに乗せる予定のセリフは「ほんとそれ」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: clenching both front paws while passionately agreeing, fired-up shining eyes
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-09「わかりみが深い」</b> … 目を閉じて前足を組み、深く大きくうなずく。頭の上に小さな「…！」。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: clenching both front paws while passionately agreeing, fired-up shining eyes.
-(This sticker will later carry the Japanese caption "ほんとそれ" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-09　「わかりみが深い」
-
-- ポーズ: 目を閉じて前足を組み、深く大きくうなずく。頭の上に小さな「…！」。
-- 保存ファイル名: `work/raw/C-09.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 目を閉じて前足を組み、深く大きくうなずく。頭の上に小さな「…！」。
 
-（※このスタンプに乗せる予定のセリフは「わかりみが深い」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: eyes closed with front paws folded, nodding deeply, a small ellipsis-exclamation above
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-10「そっかー」</b> … 少し眉を下げてやわらかく微笑み、首をかしげる。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: eyes closed with front paws folded, nodding deeply, a small ellipsis-exclamation above.
-(This sticker will later carry the Japanese caption "わかりみが深い" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-10　「そっかー」
-
-- ポーズ: 少し眉を下げてやわらかく微笑み、首をかしげる。
-- 保存ファイル名: `work/raw/C-10.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 少し眉を下げてやわらかく微笑み、首をかしげる。
 
-（※このスタンプに乗せる予定のセリフは「そっかー」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: eyebrows slightly lowered, soft gentle smile, head tilted
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-11「ふむふむ」</b> … 丸い眼鏡をかけて小さなメモを見つめる。真剣な表情。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: eyebrows slightly lowered, soft gentle smile, head tilted.
-(This sticker will later carry the Japanese caption "そっかー" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-11　「ふむふむ」
-
-- ポーズ: 丸い眼鏡をかけて小さなメモを見つめる。真剣な表情。
-- 保存ファイル名: `work/raw/C-11.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 丸い眼鏡をかけて小さなメモを見つめる。真剣な表情。
 
-（※このスタンプに乗せる予定のセリフは「ふむふむ」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: wearing round glasses, studying a small notepad, focused expression
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-12「わたしも！」</b> … 片前足で自分を指さして目を大きく見開く。うれしそうな笑顔。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: wearing round glasses, studying a small notepad, focused expression.
-(This sticker will later carry the Japanese caption "ふむふむ" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-12　「わたしも！」
-
-- ポーズ: 片前足で自分を指さして目を大きく見開く。うれしそうな笑顔。
-- 保存ファイル名: `work/raw/C-12.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 片前足で自分を指さして目を大きく見開く。うれしそうな笑顔。
 
-（※このスタンプに乗せる予定のセリフは「わたしも！」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: pointing at itself with one paw, eyes wide open, delighted smile
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-13「つらかったね」</b> … 前足をそっと差し出して寄り添う。眉を下げたやさしい目。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: pointing at itself with one paw, eyes wide open, delighted smile.
-(This sticker will later carry the Japanese caption "わたしも！" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-13　「つらかったね」
-
-- ポーズ: 前足をそっと差し出して寄り添う。眉を下げたやさしい目。
-- 保存ファイル名: `work/raw/C-13.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 前足をそっと差し出して寄り添う。眉を下げたやさしい目。
 
-（※このスタンプに乗せる予定のセリフは「つらかったね」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: gently reaching out one paw in comfort, lowered brows, tender caring eyes
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-14「がんばったね」</b> … 小さなタオルを両前足で持って差し出す。あたたかい笑顔。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: gently reaching out one paw in comfort, lowered brows, tender caring eyes.
-(This sticker will later carry the Japanese caption "つらかったね" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-14　「がんばったね」
-
-- ポーズ: 小さなタオルを両前足で持って差し出す。あたたかい笑顔。
-- 保存ファイル名: `work/raw/C-14.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 小さなタオルを両前足で持って差し出す。あたたかい笑顔。
 
-（※このスタンプに乗せる予定のセリフは「がんばったね」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: holding out a small towel with both paws, warm approving smile
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-15「えらい！」</b> … 両前足で拍手する。目をキラキラさせ、まわりに星が飛ぶ。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: holding out a small towel with both paws, warm approving smile.
-(This sticker will later carry the Japanese caption "がんばったね" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-15　「えらい！」
-
-- ポーズ: 両前足で拍手する。目をキラキラさせ、まわりに星が飛ぶ。
-- 保存ファイル名: `work/raw/C-15.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 両前足で拍手する。目をキラキラさせ、まわりに星が飛ぶ。
 
-（※このスタンプに乗せる予定のセリフは「えらい！」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
+```
+
+```text
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
+
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
+
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
+
+POSE: applauding with both front paws, sparkling eyes, stars bursting around
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>
 
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
+<details><summary><b>C-16「気持ちわかるよ」</b> … 目を閉じて、そっと抱きしめるように両前足を広げる。まわりにふんわりハート。</summary>
 
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+添付した画像のキャラクターを、まったく同じ体型・同じ顔・
+同じ耳の形・同じ輪郭線で描いてください。
+変えるのはポーズと表情だけです。
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+【絶対に変えないもの】
+・頭と体の比率（2頭身。頭が大きく体は小さい）
+・首の長さ（首はほとんど無い）
+・耳の形と大きさ（頭の左右に大きく張り出した、毛先がギザギザの立ち耳。
+　小さくしない、垂らさない、丸くしない）
+・前足と後ろ足の短さ（短くて丸い。指は描かない）
+・毛色（クリームベージュ地に、頭頂・耳まわり・背中・胸から前足へシルバーグレーの差し色）
+・毛先のふわふわギザギザした輪郭
+・目の描き方（大きめの真っ黒な楕円。白いハイライトは入れない）
+・鼻と口（小さなこげ茶の丸い鼻、その下にW字の口。開けたときは中がピンク）
+・ほっぺ（左右にピンクの斜線が2本ずつ）
+・線の色と太さ（こげ茶色の太い手描き線）
+・塗りの質感（色鉛筆・クレヨン風のざらついた塗り、ムラのある手描き感）
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+【必ず守ること】
+・キャラクターは1体だけ。グリッドや複数バリエーションにしない
+・必ず全身を描く。体の一部が画面の外で切れないようにする
+・背景に物や風景を描かない（切り抜いて使うため）
+・影・地面・グラデーション・模様を描かない
+・文字も数字も一切描かない。下の説明に出てくる言葉を絵の中に書かない
 
-Pose and expression: applauding with both front paws, sparkling eyes, stars bursting around.
-(This sticker will later carry the Japanese caption "えらい！" added in post - match the mood, but do not draw any text.)
-```
-
-</details>
-
-## C-16　「気持ちわかるよ」
-
-- ポーズ: 目を閉じて、そっと抱きしめるように両前足を広げる。まわりにふんわりハート。
-- 保存ファイル名: `work/raw/C-16.png`
-
-<details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
-
-```text
-添付の参考画像のキャラクターを、同じ子だと分かるように維持して描いてください。
-
-【キャラクター設定】
-- ヨークシャーテリアの子犬。2〜3頭身のデフォルメ、基本は正面向き
-- 毛色はクリームベージュ、耳まわり・背中・足先にシルバーグレーの差し色。毛先はふわふわギザギザ
-- 線はこげ茶色の太めの手描き線。色鉛筆／クレヨンのようなざらついた塗り、はみ出しのある手描き感
-- 顔は大きな丸い黒目、小さなこげ茶の鼻、ピンクのほっぺ（斜線2本）、開いた口にピンクの舌
-- やさしくて、ゆるくて、かわいい雰囲気
-
-【画面の指定】
-- 正方形キャンバス（1:1）、キャラクターは中央
-- 背景は純白（#FFFFFF）の単色のみ。影・地面・枠線・グラデーション・模様は一切描かない
-- キャラクターは1体だけ。コマ割り・複数バリエーション・見本シートにしない
-- 全体を画面の80%くらいの大きさに収め、四辺に余白をあける
-- 文字・ロゴ・透かしは入れない
-
-【今回のポーズ・表情】
+【ポーズ】
 目を閉じて、そっと抱きしめるように両前足を広げる。まわりにふんわりハート。
 
-（※このスタンプに乗せる予定のセリフは「気持ちわかるよ」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+背景は淡いミントグリーンの単色。正方形。キャラクターは中央に、四辺に余白をあけて描く。
 ```
 
-</details>
-
-<details><summary>English prompt（英語のほうが安定する場合はこちら）</summary>
-
 ```text
-Keep the character from the attached reference image recognizably the same dog.
+Draw the character from the attached image with exactly the same body shape,
+the same face, the same ear shape and the same outline.
+Only the pose and the expression change.
 
-Character: chibi Yorkshire Terrier puppy, 2-3 heads tall, facing the viewer.
-Cream-beige fur with silver-grey accents on the ears, back and paws, fluffy jagged fur tips.
-Thick hand-drawn dark-brown outlines, colored-pencil / crayon texture with visible grain.
-Big round black eyes, small dark-brown nose, pink blush strokes on the cheeks, open mouth with a pink tongue.
-Soft, gentle, cute picture-book mood.
+NEVER CHANGE:
+- Head-to-body ratio (about 2 heads tall, big head, small body)
+- Neck length (there is almost no neck)
+- Ear shape and size (large upright ears flaring out to both sides with jagged fur tips;
+  do not shrink them, do not make them floppy, do not round them off)
+- Short round front and hind legs (no separated toes)
+- Fur colors (cream beige base, silver-grey accents on the crown, around the ears,
+  along the back and from the chest down the front legs)
+- The fluffy jagged fur silhouette
+- Eye style (fairly large solid black ovals, no white highlight)
+- Nose and mouth (small dark-brown round nose, W-shaped mouth below it, pink inside when open)
+- Cheeks (two pink diagonal strokes on each cheek)
+- Line color and weight (thick hand-drawn dark-brown outlines)
+- Coloring texture (grainy colored-pencil / crayon shading with uneven hand-drawn strokes)
 
-Canvas: square 1:1, character centered, occupying about 80% of the frame with clear margins.
-Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no ground, no frame, no gradient, no pattern.
-Exactly one character. Not a sheet, not a grid, not multiple variations.
-No text, no logo, no watermark.
+MUST FOLLOW:
+- Exactly one character. Not a grid, not multiple variations
+- Always draw the full body, never cut off by the edge of the canvas
+- No objects and no scenery in the background (the art will be cut out later)
+- No shadows, no ground, no gradients, no patterns
+- No text and no numbers anywhere
 
-Pose and expression: eyes closed, both front paws opened wide for a gentle hug, soft hearts floating around.
-(This sticker will later carry the Japanese caption "気持ちわかるよ" added in post - match the mood, but do not draw any text.)
+POSE: eyes closed, both front paws opened wide for a gentle hug, soft hearts floating around
+
+Background: a flat pale mint green, flat. Square canvas, character centered with margins on all sides.
 ```
 
 </details>

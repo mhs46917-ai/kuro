@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """LINEスタンプ用ツールキット：背景の切り抜き → セリフ合成 → 提出用ZIP作成。
 
+    python3 scripts/stickerkit.py split --sheet work/sheets/A-sheet1.png --set A --grid 3x3 --start 1
     python3 scripts/stickerkit.py cutout  --set A        # work/raw → work/cutout
     python3 scripts/stickerkit.py text    --set A        # セリフを焼き込む（任意）
     python3 scripts/stickerkit.py package --set A        # dist/ にZIPを作る
@@ -229,6 +230,56 @@ def draw_caption(
     d.text((x, y), text, font=font, fill=fill, stroke_width=sw, stroke_fill=stroke)
 
 
+# ------------------------------------------------------------------- grid split
+def parse_grid(spec: str) -> tuple[int, int]:
+    try:
+        cols, rows = (int(v) for v in spec.lower().split("x"))
+        if cols < 1 or rows < 1:
+            raise ValueError
+    except ValueError:
+        sys.exit(f"--grid は 3x3 のように指定してください（今: {spec}）")
+    return cols, rows
+
+
+def is_blank(cell: Image.Image) -> bool:
+    """ほぼ単色（＝何も描かれていない）コマかどうか。"""
+    small = cell.convert("RGB").resize((32, 32), Image.BILINEAR)
+    # チャンネルごとの「面内の」ばらつきを見る（全体のstdだと色味の差を拾ってしまう）
+    spread = np.asarray(small, dtype=np.float32).std(axis=(0, 1)).max()
+    return float(spread) < 4.0
+
+
+def cmd_split(args: argparse.Namespace) -> None:
+    sheet = Image.open(args.sheet).convert("RGBA")
+    cols, rows = parse_grid(args.grid)
+    out_dir = Path(args.output)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    count = args.count or cols * rows
+    cw, ch = sheet.width / cols, sheet.height / rows
+    inset_x, inset_y = int(cw * args.inset), int(ch * args.inset)
+
+    saved = 0
+    for i in range(count):
+        r, c = divmod(i, cols)
+        if r >= rows:
+            break
+        box = (round(c * cw) + inset_x, round(r * ch) + inset_y,
+               round((c + 1) * cw) - inset_x, round((r + 1) * ch) - inset_y)
+        cell = sheet.crop(box)
+        no = args.start + i
+        name = f"{args.set.upper()}-{no:02d}.png"
+        if is_blank(cell):
+            print(f"  {r+1}段{c+1}列 → {name}  空のコマのようなので飛ばしました")
+            continue
+        cell.save(out_dir / name, "PNG")
+        print(f"  {r+1}段{c+1}列 → {name}  {cell.width}x{cell.height}")
+        saved += 1
+    small = [n for n in (cw - 2 * inset_x, ch - 2 * inset_y) if n < 320]
+    if small:
+        print("  ※ 1コマが小さめです。Geminiの出力解像度を上げるか --grid を粗くしてください。")
+    print(f"✓ {saved}枚を {out_dir} に切り出しました。")
+
+
 # ------------------------------------------------------------------- subcommands
 def cmd_cutout(args: argparse.Namespace) -> None:
     in_dir, out_dir = Path(args.input), Path(args.output)
@@ -390,6 +441,16 @@ def cmd_check(args: argparse.Namespace) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
+
+    sp = sub.add_parser("split", help="グリッド一覧画像を1コマずつに切り分ける")
+    sp.add_argument("--sheet", required=True, help="Geminiが出した一覧画像")
+    sp.add_argument("--set", required=True, help="A/B/C")
+    sp.add_argument("--grid", default="3x3", help="列x行（既定 3x3）")
+    sp.add_argument("--start", type=int, default=1, help="左上のコマの番号")
+    sp.add_argument("--count", type=int, help="実際に描かれているコマ数（既定: 全部）")
+    sp.add_argument("--inset", type=float, default=0.0, help="各コマの外周を削る割合（例 0.02）")
+    sp.add_argument("--output", default=str(ROOT / "work/raw"))
+    sp.set_defaults(func=cmd_split)
 
     c = sub.add_parser("cutout", help="背景を透過にして370x320に整える")
     c.add_argument("--input", default=str(ROOT / "work/raw"))
