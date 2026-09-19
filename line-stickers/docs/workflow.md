@@ -79,7 +79,7 @@ python3 scripts/stickerkit.py check dist/kuro-stickers-A.zip
 
 ## セットを増やすとき
 
-`--set B` `--set C` `--set D` に変えて 1〜5 を繰り返すだけです。
+`--set B`（ネガティブ返事）、`--set C`（共感返事）に変えて 1〜5 を繰り返すだけです。
 セリフを変えたい・増やしたいときは `prompts/prompts.json` を編集して
 
 ```bash

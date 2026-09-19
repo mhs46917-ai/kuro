@@ -1,14 +1,13 @@
-# セットB：ていねい・敬語（polite）
+# セットB：ネガティブ返事（negative）
 
-職場・先輩・ママ友に送れる敬語版。検索されやすく息が長いセット。
+「行けたらいく」「だるいわー」など、気を使わない相手に送るゆるいネガティブ。家族・親友・恋人向けで刺さるセット。
 
 ## 使い方
 
 1. Gemini に `reference/character.png` を添付する
 2. 下の各プロンプトを1つずつ貼って生成する（1枚ずつ作るのが一番ブレません）
-3. 気に入った画像を `work/raw/A-01.png` のように保存する
-   （このセットなら `B-01.png` 〜 `B-16.png`）
-4. `python3 scripts/stickerkit.py cutout` → `package` でZIPまで作る
+3. 気に入った画像を `work/raw/B-01.png` 〜 `work/raw/B-16.png` の名前で保存する（番号が並び順になります）
+4. `python3 scripts/stickerkit.py cutout --set B` → `text --set B` → `package --set B` でZIPまで作る
 
 ## 共通スタイル（各プロンプトに含まれています）
 
@@ -32,9 +31,9 @@
 
 ---
 
-## B-01　「承知しました」
+## B-01　「行けたらいく」
 
-- ポーズ: 姿勢よくきちんと座って軽く一礼。きりっとした信頼感のある笑顔。
+- ポーズ: 目をそらして前足でほっぺをかく。あいまいな半笑い、汗が一滴。
 - 保存ファイル名: `work/raw/B-01.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -57,9 +56,9 @@
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-姿勢よくきちんと座って軽く一礼。きりっとした信頼感のある笑顔。
+目をそらして前足でほっぺをかく。あいまいな半笑い、汗が一滴。
 
-（※このスタンプに乗せる予定のセリフは「承知しました」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「行けたらいく」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -80,15 +79,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: sitting upright with a small polite nod, composed trustworthy smile.
-(This sticker will later carry the Japanese caption "承知しました" added in post - match the mood, but do not draw any text.)
+Pose and expression: looking away while scratching its cheek with a paw, vague awkward half-smile, one sweat drop.
+(This sticker will later carry the Japanese caption "行けたらいく" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-02　「お疲れ様です」
+## B-02　「だるいわー」
 
-- ポーズ: 湯気の立つ湯のみを両前足で持って差し出す。ねぎらうやさしい笑顔。
+- ポーズ: 背中を丸めてだらんと座り込む。半目の無表情、頭の上にどんよりした灰色の雲。
 - 保存ファイル名: `work/raw/B-02.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -111,9 +110,9 @@ Pose and expression: sitting upright with a small polite nod, composed trustwort
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-湯気の立つ湯のみを両前足で持って差し出す。ねぎらうやさしい笑顔。
+背中を丸めてだらんと座り込む。半目の無表情、頭の上にどんよりした灰色の雲。
 
-（※このスタンプに乗せる予定のセリフは「お疲れ様です」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「だるいわー」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -134,15 +133,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: offering a steaming teacup with both paws, warm caring smile.
-(This sticker will later carry the Japanese caption "お疲れ様です" added in post - match the mood, but do not draw any text.)
+Pose and expression: slouching and sitting limply, half-lidded blank eyes, a gloomy grey cloud above the head.
+(This sticker will later carry the Japanese caption "だるいわー" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-03　「よろしくお願いします」
+## B-03　「むりー」
 
-- ポーズ: 前足を揃えて深々と丁寧なおじぎ。耳が前に垂れる。
+- ポーズ: 力尽きて前のめりにぺたんと伏せる。目が「＞＜」、頭の上に白いたましいがふわり。
 - 保存ファイル名: `work/raw/B-03.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -165,9 +164,9 @@ Pose and expression: offering a steaming teacup with both paws, warm caring smil
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-前足を揃えて深々と丁寧なおじぎ。耳が前に垂れる。
+力尽きて前のめりにぺたんと伏せる。目が「＞＜」、頭の上に白いたましいがふわり。
 
-（※このスタンプに乗せる予定のセリフは「よろしくお願いします」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「むりー」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -188,15 +187,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: deep formal bow with paws together, ears falling forward.
-(This sticker will later carry the Japanese caption "よろしくお願いします" added in post - match the mood, but do not draw any text.)
+Pose and expression: collapsed flat on the ground exhausted, eyes squeezed shut, a tiny white soul floating out.
+(This sticker will later carry the Japanese caption "むりー" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-04　「ありがとうございます」
+## B-04　「めんどくさい」
 
-- ポーズ: 両前足を胸の前で合わせて感激の笑顔。まわりにキラキラと小さなハート。
+- ポーズ: 床にごろんと寝転がって足を投げ出す。半目でこちらをちらっと見る。
 - 保存ファイル名: `work/raw/B-04.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -219,9 +218,9 @@ Pose and expression: deep formal bow with paws together, ears falling forward.
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-両前足を胸の前で合わせて感激の笑顔。まわりにキラキラと小さなハート。
+床にごろんと寝転がって足を投げ出す。半目でこちらをちらっと見る。
 
-（※このスタンプに乗せる予定のセリフは「ありがとうございます」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「めんどくさい」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -242,15 +241,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: paws clasped at the chest, deeply grateful smile, sparkles and tiny hearts.
-(This sticker will later carry the Japanese caption "ありがとうございます" added in post - match the mood, but do not draw any text.)
+Pose and expression: sprawled on its back on the floor with legs flopped out, glancing at the viewer with half-lidded eyes.
+(This sticker will later carry the Japanese caption "めんどくさい" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-05　「申し訳ありません」
+## B-05　「気が向いたらね」
 
-- ポーズ: 地面に額をつけて土下座。耳がぺたんと垂れ、汗マークが一つ。
+- ポーズ: そっぽを向きながら片前足を軽くひらひらさせる。うすい笑み。
 - 保存ファイル名: `work/raw/B-05.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -273,9 +272,9 @@ Pose and expression: paws clasped at the chest, deeply grateful smile, sparkles 
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-地面に額をつけて土下座。耳がぺたんと垂れ、汗マークが一つ。
+そっぽを向きながら片前足を軽くひらひらさせる。うすい笑み。
 
-（※このスタンプに乗せる予定のセリフは「申し訳ありません」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「気が向いたらね」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -296,15 +295,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: full dogeza bow with forehead to the ground, ears flat, one sweat drop.
-(This sticker will later carry the Japanese caption "申し訳ありません" added in post - match the mood, but do not draw any text.)
+Pose and expression: looking away while lazily waving one paw, faint noncommittal smile.
+(This sticker will later carry the Japanese caption "気が向いたらね" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-06　「かしこまりました」
+## B-06　「今日はパス」
 
-- ポーズ: 背筋をぴんと伸ばして敬礼。まじめな目。
+- ポーズ: 両前足を胸の前で小さくバツにして、首を横に振る。困り眉。
 - 保存ファイル名: `work/raw/B-06.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -327,9 +326,9 @@ Pose and expression: full dogeza bow with forehead to the ground, ears flat, one
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-背筋をぴんと伸ばして敬礼。まじめな目。
+両前足を胸の前で小さくバツにして、首を横に振る。困り眉。
 
-（※このスタンプに乗せる予定のセリフは「かしこまりました」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「今日はパス」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -350,15 +349,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: back straight, crisp salute, earnest eyes.
-(This sticker will later carry the Japanese caption "かしこまりました" added in post - match the mood, but do not draw any text.)
+Pose and expression: making a small X with both paws while shaking its head, troubled eyebrows.
+(This sticker will later carry the Japanese caption "今日はパス" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-07　「確認します」
+## B-07　「ねむすぎる」
 
-- ポーズ: 小さな書類を前足で持ってのぞき込む。真剣な表情。
+- ポーズ: 大きなあくび。目に涙がにじみ、片前足で目をこする。
 - 保存ファイル名: `work/raw/B-07.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -381,9 +380,9 @@ Pose and expression: back straight, crisp salute, earnest eyes.
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-小さな書類を前足で持ってのぞき込む。真剣な表情。
+大きなあくび。目に涙がにじみ、片前足で目をこする。
 
-（※このスタンプに乗せる予定のセリフは「確認します」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「ねむすぎる」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -404,15 +403,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: holding a small document with both paws and peering at it, serious focused face.
-(This sticker will later carry the Japanese caption "確認します" added in post - match the mood, but do not draw any text.)
+Pose and expression: huge yawn with watery eyes, rubbing one eye with a paw.
+(This sticker will later carry the Japanese caption "ねむすぎる" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-08　「少々お待ちください」
+## B-08　「つかれた…」
 
-- ポーズ: 小さな砂時計を前足で持ってにっこり。頭の上に小さな時計マーク。
+- ポーズ: 肩を落としてぺたんと座り込む。耳が垂れ、頭の上に小さな湯気。
 - 保存ファイル名: `work/raw/B-08.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -435,9 +434,9 @@ Pose and expression: holding a small document with both paws and peering at it, 
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-小さな砂時計を前足で持ってにっこり。頭の上に小さな時計マーク。
+肩を落としてぺたんと座り込む。耳が垂れ、頭の上に小さな湯気。
 
-（※このスタンプに乗せる予定のセリフは「少々お待ちください」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「つかれた…」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -458,15 +457,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: holding a tiny hourglass, gentle smile, small clock symbol above the head.
-(This sticker will later carry the Japanese caption "少々お待ちください" added in post - match the mood, but do not draw any text.)
+Pose and expression: sitting slumped with drooping shoulders, ears down, a small puff of steam above.
+(This sticker will later carry the Japanese caption "つかれた…" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-09　「大丈夫です」
+## B-09　「やる気でない」
 
-- ポーズ: 片前足の肉球をぐっと前に向けて立てる。安心させるような穏やかな笑顔。
+- ポーズ: 小さなクッションに顔をうずめて突っ伏す。目は線になっている。
 - 保存ファイル名: `work/raw/B-09.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -489,9 +488,9 @@ Pose and expression: holding a tiny hourglass, gentle smile, small clock symbol 
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-片前足の肉球をぐっと前に向けて立てる。安心させるような穏やかな笑顔。
+小さなクッションに顔をうずめて突っ伏す。目は線になっている。
 
-（※このスタンプに乗せる予定のセリフは「大丈夫です」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「やる気でない」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -512,15 +511,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: one paw raised reassuringly showing the paw pad, calm comforting smile.
-(This sticker will later carry the Japanese caption "大丈夫です" added in post - match the mood, but do not draw any text.)
+Pose and expression: face-planted into a small cushion, eyes drawn as flat lines.
+(This sticker will later carry the Japanese caption "やる気でない" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-10　「助かりました」
+## B-10　「お金ない…」
 
-- ポーズ: 両前足を広げて安堵の笑顔。頭の上にほっとしたため息のもや。
+- ポーズ: 空っぽのがま口財布を逆さにしてふりふり。涙目で口がへの字。
 - 保存ファイル名: `work/raw/B-10.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -543,9 +542,9 @@ Pose and expression: one paw raised reassuringly showing the paw pad, calm comfo
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-両前足を広げて安堵の笑顔。頭の上にほっとしたため息のもや。
+空っぽのがま口財布を逆さにしてふりふり。涙目で口がへの字。
 
-（※このスタンプに乗せる予定のセリフは「助かりました」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「お金ない…」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -566,15 +565,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: both paws open in relief, relieved smile, small puff of relieved breath above.
-(This sticker will later carry the Japanese caption "助かりました" added in post - match the mood, but do not draw any text.)
+Pose and expression: shaking an empty coin purse upside down, teary eyes, wobbly frown.
+(This sticker will later carry the Japanese caption "お金ない…" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-11　「お先に失礼します」
+## B-11　「あとでいい？」
 
-- ポーズ: 小さなトートバッグを口にくわえ、片前足を振りながら歩き出す。
+- ポーズ: 片前足を前に出して「待って」のポーズ。ばつの悪そうな笑顔。
 - 保存ファイル名: `work/raw/B-11.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -597,9 +596,9 @@ Pose and expression: both paws open in relief, relieved smile, small puff of rel
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-小さなトートバッグを口にくわえ、片前足を振りながら歩き出す。
+片前足を前に出して「待って」のポーズ。ばつの悪そうな笑顔。
 
-（※このスタンプに乗せる予定のセリフは「お先に失礼します」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「あとでいい？」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -620,15 +619,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: carrying a small tote bag in the mouth, waving one paw while walking off.
-(This sticker will later carry the Japanese caption "お先に失礼します" added in post - match the mood, but do not draw any text.)
+Pose and expression: one paw held out in a wait gesture, sheepish apologetic smile.
+(This sticker will later carry the Japanese caption "あとでいい？" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-12　「ご連絡ください」
+## B-12　「しらんがな」
 
-- ポーズ: 前足でスマートフォンを持ち上げて画面をこちらに見せる。にっこり。
+- ポーズ: 両前足を軽く広げて肩をすくめる。完全な無表情、目が点。
 - 保存ファイル名: `work/raw/B-12.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -651,9 +650,9 @@ Pose and expression: carrying a small tote bag in the mouth, waving one paw whil
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-前足でスマートフォンを持ち上げて画面をこちらに見せる。にっこり。
+両前足を軽く広げて肩をすくめる。完全な無表情、目が点。
 
-（※このスタンプに乗せる予定のセリフは「ご連絡ください」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「しらんがな」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -674,15 +673,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: holding up a smartphone toward the viewer with both paws, friendly smile.
-(This sticker will later carry the Japanese caption "ご連絡ください" added in post - match the mood, but do not draw any text.)
+Pose and expression: shrugging with both paws open, completely deadpan face, dot eyes.
+(This sticker will later carry the Japanese caption "しらんがな" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-13　「検討します」
+## B-13　「ほっといて」
 
-- ポーズ: 前足をあごに当てて考え込む。頭の上に小さな「…」。
+- ポーズ: ぷいっと横を向いて目を閉じる。ほっぺをぷくっと膨らませたすねた顔。
 - 保存ファイル名: `work/raw/B-13.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -705,9 +704,9 @@ Pose and expression: holding up a smartphone toward the viewer with both paws, f
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-前足をあごに当てて考え込む。頭の上に小さな「…」。
+ぷいっと横を向いて目を閉じる。ほっぺをぷくっと膨らませたすねた顔。
 
-（※このスタンプに乗せる予定のセリフは「検討します」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「ほっといて」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -728,15 +727,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: one paw on the chin, thinking pose, small ellipsis dots above the head.
-(This sticker will later carry the Japanese caption "検討します" added in post - match the mood, but do not draw any text.)
+Pose and expression: turning its face away with eyes closed, sulking with puffed cheeks.
+(This sticker will later carry the Japanese caption "ほっといて" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-14　「行けません…」
+## B-14　「やだー」
 
-- ポーズ: 前足を胸の前で小さくバツにして、申し訳なさそうな困り眉。
+- ポーズ: 床に寝転がって手足をじたばたさせる。口を大きく開けたイヤイヤ顔。
 - 保存ファイル名: `work/raw/B-14.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -759,9 +758,9 @@ Pose and expression: one paw on the chin, thinking pose, small ellipsis dots abo
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-前足を胸の前で小さくバツにして、申し訳なさそうな困り眉。
+床に寝転がって手足をじたばたさせる。口を大きく開けたイヤイヤ顔。
 
-（※このスタンプに乗せる予定のセリフは「行けません…」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「やだー」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -782,15 +781,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: making a small X with both paws, apologetic troubled eyebrows.
-(This sticker will later carry the Japanese caption "行けません…" added in post - match the mood, but do not draw any text.)
+Pose and expression: lying on its back kicking all four legs in a tantrum, mouth wide open in protest.
+(This sticker will later carry the Japanese caption "やだー" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-15　「了解いたしました」
+## B-15　「まあいっか」
 
-- ポーズ: きちんと座って大きくうなずく。目を閉じた穏やかな笑顔。
+- ポーズ: 前足を頭の後ろに組んで天を仰ぐ。吹っ切れたゆるい笑顔。
 - 保存ファイル名: `work/raw/B-15.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -813,9 +812,9 @@ Pose and expression: making a small X with both paws, apologetic troubled eyebro
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-きちんと座って大きくうなずく。目を閉じた穏やかな笑顔。
+前足を頭の後ろに組んで天を仰ぐ。吹っ切れたゆるい笑顔。
 
-（※このスタンプに乗せる予定のセリフは「了解いたしました」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「まあいっか」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -836,15 +835,15 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: sitting properly and nodding deeply, eyes closed, serene smile.
-(This sticker will later carry the Japanese caption "了解いたしました" added in post - match the mood, but do not draw any text.)
+Pose and expression: paws behind its head, looking up at the sky, carefree relaxed smile.
+(This sticker will later carry the Japanese caption "まあいっか" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>
 
-## B-16　「おめでとうございます」
+## B-16　「聞いてないよ」
 
-- ポーズ: 小さなクラッカーを鳴らして紙吹雪が舞う。満面の笑み。
+- ポーズ: 両前足で耳をぎゅっと塞ぐ。目をぎゅっとつぶる。
 - 保存ファイル名: `work/raw/B-16.png`
 
 <details><summary>日本語プロンプト（クリックで展開・これをコピー）</summary>
@@ -867,9 +866,9 @@ Pose and expression: sitting properly and nodding deeply, eyes closed, serene sm
 - 文字・ロゴ・透かしは入れない
 
 【今回のポーズ・表情】
-小さなクラッカーを鳴らして紙吹雪が舞う。満面の笑み。
+両前足で耳をぎゅっと塞ぐ。目をぎゅっとつぶる。
 
-（※このスタンプに乗せる予定のセリフは「おめでとうございます」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
+（※このスタンプに乗せる予定のセリフは「聞いてないよ」です。セリフの雰囲気に合う表情にしてください。画像内に文字は描かないでください）
 ```
 
 </details>
@@ -890,8 +889,8 @@ Background: pure white #FFFFFF, flat, absolutely nothing else - no shadow, no gr
 Exactly one character. Not a sheet, not a grid, not multiple variations.
 No text, no logo, no watermark.
 
-Pose and expression: popping a small party popper with confetti flying, beaming joyful face.
-(This sticker will later carry the Japanese caption "おめでとうございます" added in post - match the mood, but do not draw any text.)
+Pose and expression: covering both ears tightly with its paws, eyes scrunched shut.
+(This sticker will later carry the Japanese caption "聞いてないよ" added in post - match the mood, but do not draw any text.)
 ```
 
 </details>

@@ -77,9 +77,10 @@ def main() -> None:
             "",
             "1. Gemini に `reference/character.png` を添付する",
             "2. 下の各プロンプトを1つずつ貼って生成する（1枚ずつ作るのが一番ブレません）",
-            "3. 気に入った画像を `work/raw/A-01.png` のように保存する",
-            f"   （このセットなら `{s['id']}-01.png` 〜 `{s['id']}-16.png`）",
-            "4. `python3 scripts/stickerkit.py cutout` → `package` でZIPまで作る",
+            f"3. 気に入った画像を `work/raw/{s['id']}-01.png` 〜 "
+            f"`work/raw/{s['id']}-{len(s['items']):02d}.png` の名前で保存する（番号が並び順になります）",
+            f"4. `python3 scripts/stickerkit.py cutout --set {s['id']}` → "
+            f"`text --set {s['id']}` → `package --set {s['id']}` でZIPまで作る",
             "",
             "## 共通スタイル（各プロンプトに含まれています）",
             "",
