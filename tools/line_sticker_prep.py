@@ -79,27 +79,37 @@ def remove_background(panel, tol):
     """縁から連結している背景色の領域だけを透過する。
 
     単純な色指定での塗り分けと違い、キャラクターの内側にある背景と同系色のパーツ
-    （例: 水色のナイトキャップ）を巻き込まない。
+    （例: 水色のナイトキャップ）を巻き込まない。四隅の色が食い違うコマ
+    （下半分が机、上半分が背景色など）にも対応する。
     """
     a = np.asarray(panel.convert("RGB")).astype(np.int16)
     h, w = a.shape[:2]
 
-    # 四隅のサンプルの中央値を背景色とみなす
+    # 四隅をそれぞれ独立に採る。机や床が入ったコマは隅ごとに色が違うため、
+    # 4隅をまとめて中央値にすると、どの背景とも一致しない色が出てしまう。
     k = max(2, min(h, w) // 40)
-    corners = np.concatenate([
-        a[:k, :k].reshape(-1, 3), a[:k, -k:].reshape(-1, 3),
-        a[-k:, :k].reshape(-1, 3), a[-k:, -k:].reshape(-1, 3),
-    ])
-    bg_color = np.median(corners, axis=0)
+    patches = [a[:k, :k], a[:k, -k:], a[-k:, :k], a[-k:, -k:]]
+    seeds = []
+    for patch in patches:
+        seed = np.median(patch.reshape(-1, 3), axis=0)
+        if not any(np.linalg.norm(seed - s) < tol for s in seeds):
+            seeds.append(seed)
 
-    dist = np.sqrt(((a - bg_color) ** 2).sum(axis=2))
-    bg_like = dist < tol
+    bg_like = np.zeros((h, w), dtype=bool)
+    best_seed, best_area = seeds[0], -1
+    for seed in seeds:
+        near = np.sqrt(((a - seed) ** 2).sum(axis=2)) < tol
+        bg_like |= near
+        area = int(near.sum())
+        if area > best_area:
+            best_seed, best_area = seed, area
 
     # 背景色に近い画素のうち、画像の縁につながっているものだけを背景と判定する
     lab, n = ndimage.label(bg_like)
     border = set(lab[0, :]) | set(lab[-1, :]) | set(lab[:, 0]) | set(lab[:, -1])
     border.discard(0)
     background = np.isin(lab, list(border)) if border else np.zeros_like(bg_like)
+    bg_color = best_seed
 
     return ~background, bg_color
 
