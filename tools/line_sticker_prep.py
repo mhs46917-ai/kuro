@@ -247,12 +247,23 @@ def fit_font(texts, font_path, max_w, max_h):
     return best or ImageFont.truetype(font_path, 8)
 
 
-def draw_label(canvas, text, font, band_h, stroke):
-    """コマ下部の帯にセリフを描く。白フチを付けて背景から浮かせる。"""
+def draw_label(canvas, text, font, band_h, stroke, bold=0):
+    """コマ下部の帯にセリフを描く。白フチを付けて背景から浮かせる。
+
+    太字の日本語フォントが無い環境でも使えるよう、bold を指定したときは
+    本文と同じ色の縁取りを重ねて字そのものを太らせる。白フチはその外側に出す。
+    """
     w, h = canvas.size
     d = ImageDraw.Draw(canvas)
-    d.text((w // 2, h - band_h // 2), text, font=font, fill=TEXT_RGB + (255,),
-           anchor="mm", stroke_width=stroke, stroke_fill=TEXT_STROKE_RGB + (255,))
+    pos = (w // 2, h - band_h // 2)
+    if bold > 0:
+        d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm",
+               stroke_width=bold + stroke, stroke_fill=TEXT_STROKE_RGB + (255,))
+        d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm",
+               stroke_width=bold, stroke_fill=TEXT_RGB + (255,))
+    else:
+        d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm",
+               stroke_width=stroke, stroke_fill=TEXT_STROKE_RGB + (255,))
     return canvas
 
 
@@ -294,6 +305,9 @@ def main():
     p.add_argument("--text-band", type=int, default=0,
                    help="コマ下部にセリフ用の帯を確保する高さ(px)。0で無効")
     p.add_argument("--labels", help="各コマのセリフをカンマ区切りで指定（--text-band と併用）")
+    p.add_argument("--text-bold", type=int, default=0,
+                   help="セリフを太らせる量(px)。太字の日本語フォントが無い環境向け。"
+                        "デカ文字のセットでは3〜6程度")
     p.add_argument("--font", default="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
                    help="セリフに使うフォントのパス")
     p.add_argument("--main-index", type=int, default=1,
@@ -356,15 +370,18 @@ def main():
     label_font = stroke_w = None
     if labels and args.text_band > 0:
         stroke_w = max(2, args.text_band // 14)
+        pad = args.text_bold * 2  # 太らせた分だけ収まる箱を小さくする
         label_font = fit_font([t for t in labels if t], args.font,
-                              STICKER_W - 24, args.text_band - stroke_w * 2 - 6)
+                              STICKER_W - 24 - pad,
+                              args.text_band - stroke_w * 2 - pad - 6)
 
     covers = []
     for i, panel in enumerate(panels, 1):
         out = process(panel, args)
         covers.append(out.copy())  # main/tab は文字なしで作る（タブは96x74で文字が潰れる）
         if label_font and i <= len(labels) and labels[i - 1]:
-            out = draw_label(out, labels[i - 1], label_font, args.text_band, stroke_w)
+            out = draw_label(out, labels[i - 1], label_font, args.text_band,
+                             stroke_w, args.text_bold)
         name = os.path.join(args.outdir, f"{i:02d}.png")
         out.save(name)
         results.append(out)
