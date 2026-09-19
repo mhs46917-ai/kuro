@@ -256,14 +256,15 @@ def draw_label(canvas, text, font, band_h, stroke, bold=0):
     w, h = canvas.size
     d = ImageDraw.Draw(canvas)
     pos = (w // 2, h - band_h // 2)
-    if bold > 0:
+    if stroke > 0:
+        # 白フチは、太らせた字のさらに外側に出す
         d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm",
                stroke_width=bold + stroke, stroke_fill=TEXT_STROKE_RGB + (255,))
+    if bold > 0:
         d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm",
                stroke_width=bold, stroke_fill=TEXT_RGB + (255,))
     else:
-        d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm",
-               stroke_width=stroke, stroke_fill=TEXT_STROKE_RGB + (255,))
+        d.text(pos, text, font=font, fill=TEXT_RGB + (255,), anchor="mm")
     return canvas
 
 
