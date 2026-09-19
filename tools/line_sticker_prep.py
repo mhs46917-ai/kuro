@@ -114,12 +114,13 @@ def remove_background(panel, tol):
     return ~background, bg_color
 
 
-def drop_bg_tint(panel, mask, bg_color, strength):
-    """背景と同じ色味を帯びた画素をマスクから外す。接地影の除去用。
+def drop_bg_tint(panel, mask, bg_color, strength, background):
+    """背景と同じ色味を帯びた画素のうち、背景に接しているものだけを外す。
 
-    影は「背景色を暗くしたもの」なので、無彩色からのズレの向きが背景と揃う。
-    一方、ほお紅は逆向き、白い体はほぼ無彩色、青いナイトキャップは別の向きに
-    なるため、向きの一致だけを見れば影だけを選んで落とせる。
+    接地影は「背景色を暗くしたもの」なので、無彩色からのズレの向きが背景と揃う。
+    ただし向きだけで判定すると、背景と同系色の小物（緑のかぼちゃ、緑の落ち葉）まで
+    削れてしまう。影は必ず背景に接しているのに対し、小物は輪郭線で囲まれて
+    背景から切り離されているため、背景との接触を条件に加えれば選り分けられる。
     """
     if strength <= 0:
         return mask
@@ -138,8 +139,18 @@ def drop_bg_tint(panel, mask, bg_color, strength):
     with np.errstate(invalid="ignore", divide="ignore"):
         cos = (px_c @ (bg_c / bg_norm)) / np.maximum(px_norm, 1e-6)
 
-    tinted = (cos > 0.75) & (px_norm > strength)
-    return mask & ~tinted
+    tinted = (cos > 0.75) & (px_norm > strength) & mask
+    if not tinted.any():
+        return mask
+
+    # 背景に接している塊だけを落とす。輪郭線で囲まれた小物は残る。
+    lab, n = ndimage.label(tinted)
+    near_bg = ndimage.binary_dilation(background, iterations=2)
+    touching = set(np.unique(lab[near_bg & tinted]))
+    touching.discard(0)
+    if not touching:
+        return mask
+    return mask & ~np.isin(lab, list(touching))
 
 
 def drop_blue(panel, mask, threshold):
@@ -249,7 +260,7 @@ def process(panel, args):
     panel = inset(panel, args.inset)
     panel = crop_text_band(panel, args.crop_top)
     mask, bg_color = remove_background(panel, args.tolerance)
-    mask = drop_bg_tint(panel, mask, bg_color, args.drop_shadow)
+    mask = drop_bg_tint(panel, mask, bg_color, args.drop_shadow, ~mask)
     if args.drop_blue > 0:
         mask = drop_blue(panel, mask, args.drop_blue)
     if not args.keep_all:
