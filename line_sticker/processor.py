@@ -104,9 +104,9 @@ def fit_to_canvas_with_caption(
     fill: str = "black",
     stroke_fill: str = "white",
     stroke_width: int = 6,
-    top_margin: int = 10,
-    text_gap: int = 6,
-    side_margin: int = 10,
+    top_margin: int = 8,
+    text_gap: int = 4,
+    side_margin: int = 6,
 ) -> Image.Image:
     """Reserve a horizontally-centered text band at the top of the canvas,
     then scale `image` (preserving aspect ratio) to fit the remaining space
