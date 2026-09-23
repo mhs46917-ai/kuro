@@ -216,7 +216,7 @@ python3 tools/line_sticker_prep.py grid1.jpg grid2.jpg grid3.jpg \
 | # | パート | タイトル | 個数 | 備考 |
 |---|---|---|---|---|
 | 1 | Part1 | 可愛くないペンギン1【無愛想な返事】 | 24 | はぁ？／それがどうした等、素っ気ない返事＋汎用返事 |
-| 2 | Part2 | 可愛くないペンギン2【文句ばっかり】 | 24 | 愚痴・文句系。「舐めてる」「今日はもう無理」は不採用 |
+| 2 | Part2 | 可愛くないペンギン2【文句ばっかり】 | 24 | 愚痴・文句系。「今日はもう無理」「納得いかない」は不採用、「舐めてる？」採用 |
 
 英題：Unfriendly Penguin 1: Blunt Replies / Unfriendly Penguin 2: Just Complaints
 
