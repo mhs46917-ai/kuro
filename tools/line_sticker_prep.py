@@ -285,7 +285,8 @@ def process(panel, args):
     rgba.putalpha(alpha)
 
     if args.outline_width > 0 or args.glow_alpha > 0:
-        rgba = add_outline(rgba, args.outline_width, OUTLINE_RGB, args.outline_alpha,
+        outline_rgb = args.outline_rgb_tuple if args.outline_rgb else OUTLINE_RGB
+        rgba = add_outline(rgba, args.outline_width, outline_rgb, args.outline_alpha,
                            GLOW_RGB, args.glow_alpha, args.glow_blur)
     if args.text_band > 0:
         # 文字帯のぶんキャラを上に寄せ、下に余白を確保する
@@ -331,6 +332,8 @@ def main():
                    help="青が突出した画素を落とす閾値(B-R)。接地影の除去用。"
                         "意図して青いパーツがある絵では 0 にする")
     p.add_argument("--outline-width", type=int, default=3, help="縁取りの太さ(px)。0で無効")
+    p.add_argument("--outline-rgb", default=None,
+                   help="縁取りの色をR,G,Bで指定（例: 0,0,0 で黒）。省略時は既定のグレー")
     p.add_argument("--outline-alpha", type=int, default=OUTLINE_ALPHA, help="縁取りの不透明度(0-255)")
     p.add_argument("--glow-alpha", type=int, default=GLOW_ALPHA, help="ソフトシャドウの不透明度(0-255)")
     p.add_argument("--glow-blur", type=int, default=GLOW_BLUR, help="ソフトシャドウのぼかし量(px)")
@@ -338,6 +341,9 @@ def main():
     p.add_argument("--keep-all", action="store_true",
                    help="孤立パーツを消さない（効果線を残したいときに使う）")
     args = p.parse_args()
+
+    args.outline_rgb_tuple = (tuple(int(v) for v in args.outline_rgb.split(","))
+                               if args.outline_rgb else None)
 
     if args.no_outline:
         args.outline_width, args.glow_alpha = 0, 0
