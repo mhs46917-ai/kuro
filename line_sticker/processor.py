@@ -94,8 +94,9 @@ def resolve_font_path(font_path: str | Path | None) -> str:
     )
 
 
-def add_text_caption(
+def fit_to_canvas_with_caption(
     image: Image.Image,
+    canvas_size: tuple[int, int],
     text: str,
     *,
     font_path: str,
@@ -103,12 +104,35 @@ def add_text_caption(
     fill: str = "black",
     stroke_fill: str = "white",
     stroke_width: int = 6,
-    margin: tuple[int, int] = (16, 12),
+    top_margin: int = 10,
+    text_gap: int = 8,
+    side_margin: int = 10,
 ) -> Image.Image:
-    """Draw `text` at the top-left corner of `image`, with a colored fill and
-    a thick outline stroke so it stays readable over any sticker artwork."""
-    img = image.convert("RGBA")
-    draw = ImageDraw.Draw(img)
+    """Reserve a horizontally-centered text band at the top of the canvas,
+    then scale `image` (preserving aspect ratio) to fit the remaining space
+    below it, so the artwork never overlaps the caption."""
+    target_w, target_h = canvas_size
+    canvas = Image.new("RGBA", canvas_size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(canvas)
     font = ImageFont.truetype(font_path, font_size)
-    draw.text(margin, text, font=font, fill=fill, stroke_width=stroke_width, stroke_fill=stroke_fill)
-    return img
+
+    bbox = draw.textbbox((0, 0), text, font=font, stroke_width=stroke_width)
+    text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    text_x = (target_w - text_w) / 2 - bbox[0]
+    text_y = top_margin - bbox[1]
+    draw.text((text_x, text_y), text, font=font, fill=fill, stroke_width=stroke_width, stroke_fill=stroke_fill)
+
+    reserved_h = top_margin + text_h + text_gap
+    avail_w = max(1, target_w - 2 * side_margin)
+    avail_h = max(1, target_h - reserved_h - side_margin)
+
+    img = image.convert("RGBA")
+    src_w, src_h = img.size
+    scale = min(avail_w / src_w, avail_h / src_h)
+    new_w, new_h = max(1, round(src_w * scale)), max(1, round(src_h * scale))
+    resized = img.resize((new_w, new_h), Image.LANCZOS)
+
+    offset_x = (target_w - new_w) // 2
+    offset_y = round(reserved_h + (avail_h - new_h) / 2)
+    canvas.paste(resized, (offset_x, offset_y), resized)
+    return canvas

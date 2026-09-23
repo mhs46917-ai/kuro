@@ -17,8 +17,8 @@ from .constants import (
     TAB_SIZE,
 )
 from .processor import (
-    add_text_caption,
     fit_to_canvas,
+    fit_to_canvas_with_caption,
     find_input_images,
     remove_background,
     resolve_font_path,
@@ -120,10 +120,10 @@ def process(
     for idx, src in enumerate(images, start=1):
         img = load_processed(src)
         processed_cache[src] = img
-        sticker = fit_to_canvas(img, STICKER_MAX_SIZE)
         if idx in captions:
-            sticker = add_text_caption(
-                sticker,
+            sticker = fit_to_canvas_with_caption(
+                img,
+                STICKER_MAX_SIZE,
                 captions[idx],
                 font_path=resolved_font,
                 font_size=font_size,
@@ -131,6 +131,8 @@ def process(
                 stroke_fill=outline_color,
                 stroke_width=outline_width,
             )
+        else:
+            sticker = fit_to_canvas(img, STICKER_MAX_SIZE)
         out_path = work_dir / f"{idx:02d}.png"
         save_png_under_limit(sticker, out_path)
         sticker_paths.append(out_path)

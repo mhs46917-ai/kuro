@@ -38,8 +38,9 @@ python -m line_sticker.cli process raw/ -o sticker_set.zip
 - `--no-bg-removal`: 背景除去をスキップ(すでに透過済みの画像を使う場合)
 - `--tolerance <int>`: フォールバックの背景除去の色許容度(デフォルト30)
 - `--keep-dir <dir>`: ZIPに加えて生成したPNGをディレクトリにも残す
-- `--text "N:テキスト"`: N番目(入力の並び順、1始まり)のスタンプの左上に、白フチ付き
-  文字を入れる。繰り返し指定可能。例: `--text "1:了解" --text "2:おかえり"`
+- `--text "N:テキスト"`: N番目(入力の並び順、1始まり)のスタンプ上部に、白フチ付き
+  文字を中央揃えで入れる。イラストは文字と重ならないよう自動的に縮小される。
+  繰り返し指定可能。例: `--text "1:了解" --text "2:おかえり"`
 - `--font <path>`: 文字に使うフォント(省略時はIPAGothicなど日本語対応フォントを自動検出)
 - `--font-size <int>` / `--text-color <color>` / `--outline-color <color>` / `--outline-width <int>`:
   文字サイズ・色・フチ色・フチ太さを調整
