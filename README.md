@@ -44,6 +44,9 @@ python -m line_sticker.cli process raw/ -o sticker_set.zip
 - `--font <path>`: 文字に使うフォント(省略時はIPAGothicなど日本語対応フォントを自動検出)
 - `--font-size <int>` / `--text-color <color>` / `--outline-color <color>` / `--outline-width <int>`:
   文字サイズ・色・フチ色・フチ太さを調整
+- `--image-scale <float>`: 文字の下に収めたイラストをさらに拡大(例: `1.2` で1.2倍。
+  はみ出した分は自動的に切り取られる)
+- `--text-gap <int>`: 文字下端とイラスト上端の間隔(px)。詰めるほど画像を大きくできる
 
 生成される `sticker_set.zip` の中身:
 

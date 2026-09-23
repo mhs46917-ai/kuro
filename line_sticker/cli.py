@@ -70,6 +70,11 @@ def _parse_text_specs(specs: tuple[str, ...]) -> dict[int, str]:
 @click.option("--text-color", default="black", show_default=True, help="Caption fill color.")
 @click.option("--outline-color", default="white", show_default=True, help="Caption outline (white frame) color.")
 @click.option("--outline-width", type=int, default=6, show_default=True, help="Caption outline thickness in px.")
+@click.option("--image-scale", type=float, default=1.0, show_default=True,
+              help="Extra scale factor applied to captioned artwork after it's fit under the text "
+                   "(e.g. 1.2 = 20%% bigger; may bleed past the canvas edges, which is fine for stickers).")
+@click.option("--text-gap", type=int, default=4, show_default=True,
+              help="Gap in px between the caption's bottom and the artwork's top (captioned stickers only).")
 def process(
     input_dir: Path,
     output_zip: Path,
@@ -84,6 +89,8 @@ def process(
     text_color: str,
     outline_color: str,
     outline_width: int,
+    image_scale: float,
+    text_gap: int,
 ) -> None:
     """Convert every image in INPUT_DIR into a LINE sticker set ZIP.
 
@@ -130,6 +137,8 @@ def process(
                 fill=text_color,
                 stroke_fill=outline_color,
                 stroke_width=outline_width,
+                text_gap=text_gap,
+                image_scale=image_scale,
             )
         else:
             sticker = fit_to_canvas(img, STICKER_MAX_SIZE)
