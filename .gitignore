@@ -1,0 +1,5 @@
+# tools/line_sticker_prep.py が書き出す提出用アセット（毎パックの生成物、ソースではない）
+*_out/
+*_submission.zip
+__pycache__/
+*.pyc
