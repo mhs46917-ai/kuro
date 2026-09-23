@@ -105,7 +105,7 @@ def fit_to_canvas_with_caption(
     stroke_fill: str = "white",
     stroke_width: int = 6,
     top_margin: int = 10,
-    text_gap: int = 8,
+    text_gap: int = 6,
     side_margin: int = 10,
 ) -> Image.Image:
     """Reserve a horizontally-centered text band at the top of the canvas,
@@ -132,7 +132,10 @@ def fit_to_canvas_with_caption(
     new_w, new_h = max(1, round(src_w * scale)), max(1, round(src_h * scale))
     resized = img.resize((new_w, new_h), Image.LANCZOS)
 
+    # Anchor the artwork right under the caption (instead of centering it in
+    # the leftover space) so text and image sit close together, with any
+    # slack left as bottom margin rather than splitting it above the image.
     offset_x = (target_w - new_w) // 2
-    offset_y = round(reserved_h + (avail_h - new_h) / 2)
+    offset_y = round(reserved_h)
     canvas.paste(resized, (offset_x, offset_y), resized)
     return canvas
