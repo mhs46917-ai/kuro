@@ -1,0 +1,22 @@
+[project]
+name = "line-sticker"
+version = "0.1.0"
+description = "Convert Gemini-generated images into a LINE Creators Market sticker set ZIP."
+requires-python = ">=3.9"
+dependencies = [
+    "Pillow>=10.0.0",
+    "click>=8.1.0",
+]
+
+[project.optional-dependencies]
+rembg = ["rembg>=2.0.0"]
+
+[project.scripts]
+line-sticker = "line_sticker.cli:cli"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["line_sticker"]
