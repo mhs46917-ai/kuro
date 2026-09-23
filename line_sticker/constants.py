@@ -15,3 +15,11 @@ MAX_STICKER_COUNT = 40
 MAX_FILE_SIZE_BYTES = 1024 * 1024  # 1 MB per image
 
 SUPPORTED_INPUT_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp", ".bmp")
+
+# Searched in order when --font isn't given; the first one that exists wins.
+DEFAULT_FONT_CANDIDATES = (
+    "/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf",
+    "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+)

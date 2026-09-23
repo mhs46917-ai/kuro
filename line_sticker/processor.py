@@ -5,9 +5,9 @@ from __future__ import annotations
 import io
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
-from .constants import MAX_FILE_SIZE_BYTES
+from .constants import DEFAULT_FONT_CANDIDATES, MAX_FILE_SIZE_BYTES
 
 try:
     from rembg import remove as _rembg_remove
@@ -77,3 +77,38 @@ def save_png_under_limit(image: Image.Image, path: Path, max_bytes: int = MAX_FI
 def find_input_images(input_dir: Path, extensions: tuple[str, ...]) -> list[Path]:
     files = [p for p in input_dir.iterdir() if p.suffix.lower() in extensions and p.is_file()]
     return sorted(files, key=lambda p: p.name)
+
+
+def resolve_font_path(font_path: str | Path | None) -> str:
+    """Return a usable font file path, defaulting to a bundled Japanese-capable
+    font if none is given."""
+    if font_path:
+        if not Path(font_path).is_file():
+            raise FileNotFoundError(f"Font file not found: {font_path}")
+        return str(font_path)
+    for candidate in DEFAULT_FONT_CANDIDATES:
+        if Path(candidate).is_file():
+            return candidate
+    raise FileNotFoundError(
+        "No default font found; pass --font pointing to a .ttf/.otf file."
+    )
+
+
+def add_text_caption(
+    image: Image.Image,
+    text: str,
+    *,
+    font_path: str,
+    font_size: int = 48,
+    fill: str = "black",
+    stroke_fill: str = "white",
+    stroke_width: int = 6,
+    margin: tuple[int, int] = (16, 12),
+) -> Image.Image:
+    """Draw `text` at the top-left corner of `image`, with a colored fill and
+    a thick outline stroke so it stays readable over any sticker artwork."""
+    img = image.convert("RGBA")
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype(font_path, font_size)
+    draw.text(margin, text, font=font, fill=fill, stroke_width=stroke_width, stroke_fill=stroke_fill)
+    return img

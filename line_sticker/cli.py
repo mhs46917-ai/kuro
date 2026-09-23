@@ -16,13 +16,35 @@ from .constants import (
     SUPPORTED_INPUT_EXTENSIONS,
     TAB_SIZE,
 )
-from .processor import fit_to_canvas, find_input_images, remove_background, save_png_under_limit
+from .processor import (
+    add_text_caption,
+    fit_to_canvas,
+    find_input_images,
+    remove_background,
+    resolve_font_path,
+    save_png_under_limit,
+)
 
 
 @click.group()
 @click.version_option()
 def cli() -> None:
     """Build a LINE Creators Market sticker set from raw images."""
+
+
+def _parse_text_specs(specs: tuple[str, ...]) -> dict[int, str]:
+    captions: dict[int, str] = {}
+    for spec in specs:
+        sep = ":" if ":" in spec else ("=" if "=" in spec else None)
+        if sep is None:
+            raise click.BadParameter(f"--text must be 'INDEX:TEXT', got: {spec!r}")
+        idx_str, text = spec.split(sep, 1)
+        try:
+            idx = int(idx_str.strip())
+        except ValueError:
+            raise click.BadParameter(f"--text index must be an integer, got: {idx_str!r}")
+        captions[idx] = text
+    return captions
 
 
 @cli.command()
@@ -39,6 +61,15 @@ def cli() -> None:
               help="Flood-fill color tolerance used by the fallback background remover.")
 @click.option("--keep-dir", type=click.Path(path_type=Path), default=None,
               help="Also keep the generated PNGs in this directory (in addition to the ZIP).")
+@click.option("--text", "text_specs", multiple=True,
+              help="Caption a sticker: 'INDEX:TEXT' (1-based, matches input sort order), "
+                   "e.g. --text '1:了解' --text '2:おかえり'. Repeatable.")
+@click.option("--font", "font_path", type=click.Path(exists=True, dir_okay=False, path_type=Path),
+              default=None, help="TTF/OTF font for captions (default: auto-detected Japanese font).")
+@click.option("--font-size", type=int, default=48, show_default=True, help="Caption font size in px.")
+@click.option("--text-color", default="black", show_default=True, help="Caption fill color.")
+@click.option("--outline-color", default="white", show_default=True, help="Caption outline (white frame) color.")
+@click.option("--outline-width", type=int, default=6, show_default=True, help="Caption outline thickness in px.")
 def process(
     input_dir: Path,
     output_zip: Path,
@@ -47,12 +78,21 @@ def process(
     no_bg_removal: bool,
     tolerance: int,
     keep_dir: Path | None,
+    text_specs: tuple[str, ...],
+    font_path: Path | None,
+    font_size: int,
+    text_color: str,
+    outline_color: str,
+    outline_width: int,
 ) -> None:
     """Convert every image in INPUT_DIR into a LINE sticker set ZIP.
 
     Produces main.png (240x240), tab.png (96x74), and NN.png sticker bodies
     (fit within 370x320), all transparent PNGs under LINE's 1MB limit.
     """
+    captions = _parse_text_specs(text_specs)
+    resolved_font = resolve_font_path(font_path) if captions else None
+
     images = find_input_images(input_dir, SUPPORTED_INPUT_EXTENSIONS)
     if not images:
         raise click.ClickException(f"No images found in {input_dir} (looked for {SUPPORTED_INPUT_EXTENSIONS}).")
@@ -81,6 +121,16 @@ def process(
         img = load_processed(src)
         processed_cache[src] = img
         sticker = fit_to_canvas(img, STICKER_MAX_SIZE)
+        if idx in captions:
+            sticker = add_text_caption(
+                sticker,
+                captions[idx],
+                font_path=resolved_font,
+                font_size=font_size,
+                fill=text_color,
+                stroke_fill=outline_color,
+                stroke_width=outline_width,
+            )
         out_path = work_dir / f"{idx:02d}.png"
         save_png_under_limit(sticker, out_path)
         sticker_paths.append(out_path)
