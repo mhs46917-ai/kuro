@@ -130,14 +130,17 @@ def fit_to_canvas_with_caption(
     img = image.convert("RGBA")
     src_w, src_h = img.size
     scale = min(avail_w / src_w, avail_h / src_h) * image_scale
+    # Never let the artwork spill past the canvas edges (that would get
+    # silently clipped on paste): cap the scale to what actually fits below
+    # the caption, full width included.
+    max_scale = min(target_w / src_w, max(1, target_h - reserved_h) / src_h)
+    scale = min(scale, max_scale)
     new_w, new_h = max(1, round(src_w * scale)), max(1, round(src_h * scale))
     resized = img.resize((new_w, new_h), Image.LANCZOS)
 
     # Anchor the artwork right under the caption (instead of centering it in
     # the leftover space) so text and image sit close together, with any
     # slack left as bottom margin rather than splitting it above the image.
-    # image_scale > 1 can push the artwork past the canvas edges; paste()
-    # clips that automatically, which is fine for sticker bleed.
     offset_x = (target_w - new_w) // 2
     offset_y = round(reserved_h)
     canvas.paste(resized, (offset_x, offset_y), resized)
