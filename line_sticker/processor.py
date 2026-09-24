@@ -5,7 +5,7 @@ from __future__ import annotations
 import io
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageFont
 
 from .constants import DEFAULT_FONT_CANDIDATES, MAX_FILE_SIZE_BYTES
 
@@ -17,21 +17,45 @@ except ImportError:  # rembg (ML background removal) is an optional extra.
 
 def remove_background(image: Image.Image, tolerance: int = 30) -> Image.Image:
     """Strip the background, preferring rembg (ML) and falling back to a
-    corner flood-fill for images shot on a plain/solid background."""
+    color-key removal for images shot on a plain/solid background."""
     if _rembg_remove is not None:
         return _rembg_remove(image.convert("RGBA"))
-    return _flood_fill_background(image, tolerance)
+    return _color_key_background(image, tolerance)
 
 
-def _flood_fill_background(image: Image.Image, tolerance: int) -> Image.Image:
+def _color_distance(c1: tuple[int, int, int], c2: tuple[int, int, int]) -> int:
+    return sum(abs(a - b) for a, b in zip(c1, c2))
+
+
+def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
+    """Make every pixel close to the image's border color(s) transparent,
+    wherever it occurs in the image. Unlike a flood fill from the corners,
+    this also clears background trapped in pockets fully enclosed by the
+    subject (between paws, between legs, between letters of outlined text)
+    since it doesn't rely on being reachable from the edge."""
     img = image.convert("RGBA")
     w, h = img.size
-    seeds = [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1), (w // 2, 0), (0, h // 2)]
-    for seed in seeds:
-        try:
-            ImageDraw.floodfill(img, seed, (0, 0, 0, 0), thresh=tolerance)
-        except (IndexError, ValueError):
-            continue
+    border_points = [
+        (0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1),
+        (w // 2, 0), (0, h // 2), (w - 1, h // 2), (w // 2, h - 1),
+    ]
+    ref_colors: list[tuple[int, int, int]] = []
+    for x, y in border_points:
+        color = img.getpixel((x, y))[:3]
+        if all(_color_distance(color, existing) > tolerance for existing in ref_colors):
+            ref_colors.append(color)
+
+    rgb = img.convert("RGB")
+    background_mask = None
+    for color in ref_colors:
+        flat = Image.new("RGB", img.size, color)
+        diff_bands = ImageChops.difference(rgb, flat).split()
+        diff_sum = ImageChops.add(ImageChops.add(diff_bands[0], diff_bands[1]), diff_bands[2])
+        mask = diff_sum.point(lambda p: 255 if p <= tolerance else 0)
+        background_mask = mask if background_mask is None else ImageChops.lighter(background_mask, mask)
+
+    alpha = img.getchannel("A")
+    img.putalpha(ImageChops.subtract(alpha, background_mask))
     return img
 
 
