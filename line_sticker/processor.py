@@ -27,23 +27,51 @@ def _color_distance(c1: tuple[int, int, int], c2: tuple[int, int, int]) -> int:
     return sum(abs(a - b) for a, b in zip(c1, c2))
 
 
-def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
-    """Make every pixel close to the image's border color(s) transparent,
-    wherever it occurs in the image. Unlike a flood fill from the corners,
-    this also clears background trapped in pockets fully enclosed by the
-    subject (between paws, between legs, between letters of outlined text)
-    since it doesn't rely on being reachable from the edge."""
-    img = image.convert("RGBA")
+def _dominant_border_colors(
+    img: Image.Image, tolerance: int, min_share: float = 0.08
+) -> list[tuple[int, int, int]]:
+    """Sample colors all along the image's border and cluster them (by
+    `tolerance`), returning only clusters that cover at least `min_share` of
+    the perimeter. A handful of stray pixels (e.g. a sliver of a neighboring
+    cell's grid line left over from cropping) land in a tiny cluster and are
+    ignored, instead of being mistaken for a second background color."""
     w, h = img.size
-    border_points = [
-        (0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1),
-        (w // 2, 0), (0, h // 2), (w - 1, h // 2), (w // 2, h - 1),
+    step = max(1, min(w, h) // 200)
+    xs = range(0, w, step)
+    ys = range(0, h, step)
+    samples = (
+        [img.getpixel((x, 0))[:3] for x in xs]
+        + [img.getpixel((x, h - 1))[:3] for x in xs]
+        + [img.getpixel((0, y))[:3] for y in ys]
+        + [img.getpixel((w - 1, y))[:3] for y in ys]
+    )
+
+    clusters: list[list[tuple[int, int, int]]] = []
+    for color in samples:
+        for cluster in clusters:
+            if _color_distance(color, cluster[0]) <= tolerance:
+                cluster.append(color)
+                break
+        else:
+            clusters.append([color])
+
+    total = len(samples)
+    clusters.sort(key=len, reverse=True)
+    return [
+        tuple(sum(c[i] for c in cluster) // len(cluster) for i in range(3))
+        for cluster in clusters
+        if len(cluster) / total >= min_share
     ]
-    ref_colors: list[tuple[int, int, int]] = []
-    for x, y in border_points:
-        color = img.getpixel((x, y))[:3]
-        if all(_color_distance(color, existing) > tolerance for existing in ref_colors):
-            ref_colors.append(color)
+
+
+def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
+    """Make every pixel close to the image's dominant border color(s)
+    transparent, wherever it occurs in the image. Unlike a flood fill from
+    the corners, this also clears background trapped in pockets fully
+    enclosed by the subject (between paws, between legs, between letters of
+    outlined text) since it doesn't rely on being reachable from the edge."""
+    img = image.convert("RGBA")
+    ref_colors = _dominant_border_colors(img, tolerance)
 
     rgb = img.convert("RGB")
     background_mask = None
