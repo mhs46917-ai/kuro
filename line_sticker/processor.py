@@ -5,7 +5,8 @@ from __future__ import annotations
 import io
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageFont
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 from .constants import DEFAULT_FONT_CANDIDATES, MAX_FILE_SIZE_BYTES
 
@@ -27,14 +28,16 @@ def _color_distance(c1: tuple[int, int, int], c2: tuple[int, int, int]) -> int:
     return sum(abs(a - b) for a, b in zip(c1, c2))
 
 
-def _dominant_border_colors(
-    img: Image.Image, tolerance: int, min_share: float = 0.08
-) -> list[tuple[int, int, int]]:
-    """Sample colors all along the image's border and cluster them (by
-    `tolerance`), returning only clusters that cover at least `min_share` of
-    the perimeter. A handful of stray pixels (e.g. a sliver of a neighboring
-    cell's grid line left over from cropping) land in a tiny cluster and are
-    ignored, instead of being mistaken for a second background color."""
+def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
+    """Sample colors all along the image's border, cluster them (by a fixed
+    small tolerance), and return only the single largest cluster's average
+    color as the background reference. Using just the biggest cluster -
+    rather than every cluster above some share of the perimeter - matters
+    because subject content can legitimately touch a large stretch of the
+    crop's edge (a prop, a limb, a pale fur patch), and such content must
+    never be mistaken for a second background color just because it covers
+    a sizeable fraction of the border; the true background is reliably the
+    majority color since the subject is roughly centered in each cell."""
     w, h = img.size
     step = max(1, min(w, h) // 200)
     xs = range(0, w, step)
@@ -49,42 +52,48 @@ def _dominant_border_colors(
     clusters: list[list[tuple[int, int, int]]] = []
     for color in samples:
         for cluster in clusters:
-            if _color_distance(color, cluster[0]) <= tolerance:
+            if _color_distance(color, cluster[0]) <= 30:
                 cluster.append(color)
                 break
         else:
             clusters.append([color])
 
-    total = len(samples)
     clusters.sort(key=len, reverse=True)
-    return [
-        tuple(sum(c[i] for c in cluster) // len(cluster) for i in range(3))
-        for cluster in clusters
-        if len(cluster) / total >= min_share
-    ]
+    best = clusters[0]
+    return tuple(sum(c[i] for c in best) // len(best) for i in range(3))
 
 
-def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
-    """Make every pixel close to the image's dominant border color(s)
-    transparent, wherever it occurs in the image. Unlike a flood fill from
-    the corners, this also clears background trapped in pockets fully
-    enclosed by the subject (between paws, between legs, between letters of
-    outlined text) since it doesn't rely on being reachable from the edge."""
+def _color_key_background(image: Image.Image, tolerance: int, feather: int = 200) -> Image.Image:
+    """Make pixels close to the image's dominant border color transparent,
+    wherever they occur in the image. Unlike a flood fill from the corners,
+    this also clears background trapped in pockets fully enclosed by the
+    subject (between paws, between legs, between letters of outlined text)
+    since it doesn't rely on being reachable from the edge.
+
+    Pixels are ramped from fully transparent (color distance <= tolerance)
+    to fully opaque (distance >= tolerance + feather) instead of a hard
+    cutoff, and partially-transparent edge pixels are "despilled" - their
+    color is pulled back out of its blend with the background - so the
+    anti-aliased transition band around outlines and text doesn't leave a
+    visible ring tinted with the background color."""
     img = image.convert("RGBA")
-    ref_colors = _dominant_border_colors(img, tolerance)
+    ref = _dominant_border_color(img)
 
-    rgb = img.convert("RGB")
-    background_mask = None
-    for color in ref_colors:
-        flat = Image.new("RGB", img.size, color)
-        diff_bands = ImageChops.difference(rgb, flat).split()
-        diff_sum = ImageChops.add(ImageChops.add(diff_bands[0], diff_bands[1]), diff_bands[2])
-        mask = diff_sum.point(lambda p: 255 if p <= tolerance else 0)
-        background_mask = mask if background_mask is None else ImageChops.lighter(background_mask, mask)
+    arr = np.asarray(img).astype(np.float32)
+    rgb, alpha = arr[..., :3], arr[..., 3]
+    ref_arr = np.array(ref, dtype=np.float32)
 
-    alpha = img.getchannel("A")
-    img.putalpha(ImageChops.subtract(alpha, background_mask))
-    return img
+    dist = np.abs(rgb - ref_arr).sum(axis=2)
+    frac = np.clip((dist - tolerance) / feather, 0.0, 1.0)  # 0=background, 1=foreground
+    new_alpha = alpha * frac
+
+    safe_frac = np.clip(frac, 0.15, 1.0)[..., None]
+    despilled = np.clip(ref_arr + (rgb - ref_arr) / safe_frac, 0, 255)
+    edge = (frac > 0) & (frac < 1)
+    out_rgb = np.where(edge[..., None], despilled, rgb)
+
+    out = np.dstack([out_rgb, new_alpha]).astype(np.uint8)
+    return Image.fromarray(out, mode="RGBA")
 
 
 def fit_to_canvas(image: Image.Image, canvas_size: tuple[int, int]) -> Image.Image:
