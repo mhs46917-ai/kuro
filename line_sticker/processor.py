@@ -64,7 +64,7 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
     return tuple(sum(c[i] for c in best) // len(best) for i in range(3))
 
 
-def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
+def _color_key_background(image: Image.Image, tolerance: int, max_enclosed_size: int = 800) -> Image.Image:
     """Make background-colored pixels transparent, but only the ones
     actually connected to the image's border through other background-
     colored pixels - not every pixel that merely happens to be close to the
@@ -85,6 +85,15 @@ def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
     and there's no reliable way to tell "a real enclosed gap" apart from "a
     subject detail that happens to be background-colored" by color alone.
 
+    Small enclosed pockets (not reachable from the border) are removed too,
+    up to `max_enclosed_size` pixels - a gap between two letters' strokes or
+    between a loop's ends is typically a few hundred pixels at most, while a
+    subject detail that happens to share the background color (a matching
+    blanket, a pastel prop) is a much larger blob. There's still no way to
+    tell the two apart by color alone, so size is the only signal available,
+    and a large enclosed blob is left alone rather than risk erasing real
+    content.
+
     See `_resize_premultiplied` for how edge fringing from background color
     bleed is handled, at resize time rather than here."""
     img = image.convert("RGBA")
@@ -102,7 +111,11 @@ def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
         np.unique(labeled[0, :])
     ) | set(np.unique(labeled[-1, :])) | set(np.unique(labeled[:, 0])) | set(np.unique(labeled[:, -1]))
     border_labels.discard(0)
-    is_background = np.isin(labeled, list(border_labels)) if border_labels else np.zeros_like(candidate)
+
+    sizes = ndimage.sum(candidate, labeled, index=np.arange(1, n_components + 1)) if n_components else np.array([])
+    removable_labels = set(border_labels)
+    removable_labels.update(i + 1 for i, size in enumerate(sizes) if size <= max_enclosed_size)
+    is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
 
     new_alpha = np.where(is_background, 0.0, alpha)
     out = np.dstack([rgb, new_alpha]).astype(np.uint8)
