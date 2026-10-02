@@ -6,7 +6,8 @@ import io
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFont
+from scipy import ndimage
 
 from .constants import DEFAULT_FONT_CANDIDATES, MAX_FILE_SIZE_BYTES
 
@@ -64,28 +65,28 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
 
 
 def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
-    """Make every pixel close to the image's dominant border color
-    transparent, wherever it occurs in the image. Unlike a flood fill from
-    the corners, this also clears background trapped in pockets fully
-    enclosed by the subject (between paws, between legs, between letters of
-    outlined text) since it doesn't rely on being reachable from the edge.
+    """Make background-colored pixels transparent, but only the ones
+    actually connected to the image's border through other background-
+    colored pixels - not every pixel that merely happens to be close to the
+    background color wherever it occurs.
 
-    The cutoff is a hard one (not a soft, wider ramp) on purpose: a subject
-    can legitimately use a color that sits fairly close to the background in
-    this simple distance metric (a pastel prop on a pastel background, a
-    muted blanket pattern), and a wide soft-transparency band would have
-    partially erased exactly that content instead of just smoothing
-    anti-aliased edges. See `_resize_premultiplied` for how edge fringing
-    from background color bleed is handled instead, at resize time.
+    That connectivity requirement is what keeps this safe at a tolerance
+    loose enough to clear real-world noise (JPEG grain, unеven lighting on a
+    photographed background): a subject can legitimately contain small
+    patches close to the background color - a pastel prop, a blanket dyed to
+    match, pencil-shading texture that fades toward paper-white inside an
+    eye patch - and those never connect through to the border because they
+    sit inside a region the subject's own (very different-colored) outline
+    or fill surrounds. Only a contiguous blob that actually reaches the
+    frame's edge is background. The tradeoff is that this no longer reaches
+    background trapped in pockets fully enclosed by the subject (between
+    paws, between letters of outlined text) the way the old flood fill
+    couldn't either - but wrongly eating real content is the worse failure,
+    and there's no reliable way to tell "a real enclosed gap" apart from "a
+    subject detail that happens to be background-colored" by color alone.
 
-    The resulting mask is then despeckled with a median filter: a photo of a
-    hand-drawn background picks up grain/shading noise that pushes a
-    scattered few percent of true-background pixels just outside the
-    tolerance, which would otherwise show up as light flecks across what
-    should be a clean transparent area. A 3x3 median only flips a pixel
-    whose neighborhood disagrees with it, so it cleans up that kind of
-    isolated misclassification without touching real foreground shapes,
-    which are many pixels wide."""
+    See `_resize_premultiplied` for how edge fringing from background color
+    bleed is handled, at resize time rather than here."""
     img = image.convert("RGBA")
     ref = _dominant_border_color(img)
 
@@ -94,10 +95,14 @@ def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
     ref_arr = np.array(ref, dtype=np.float32)
 
     dist = np.abs(rgb - ref_arr).sum(axis=2)
-    is_background = dist <= tolerance
-    mask_img = Image.fromarray((is_background * 255).astype(np.uint8), mode="L")
-    mask_img = mask_img.filter(ImageFilter.MedianFilter(3))
-    is_background = np.asarray(mask_img) > 127
+    candidate = dist <= tolerance
+
+    labeled, n_components = ndimage.label(candidate, structure=np.ones((3, 3), dtype=int))
+    border_labels = set(
+        np.unique(labeled[0, :])
+    ) | set(np.unique(labeled[-1, :])) | set(np.unique(labeled[:, 0])) | set(np.unique(labeled[:, -1]))
+    border_labels.discard(0)
+    is_background = np.isin(labeled, list(border_labels)) if border_labels else np.zeros_like(candidate)
 
     new_alpha = np.where(is_background, 0.0, alpha)
     out = np.dstack([rgb, new_alpha]).astype(np.uint8)
