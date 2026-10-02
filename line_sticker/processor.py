@@ -6,7 +6,7 @@ import io
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from .constants import DEFAULT_FONT_CANDIDATES, MAX_FILE_SIZE_BYTES
 
@@ -63,19 +63,29 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
     return tuple(sum(c[i] for c in best) // len(best) for i in range(3))
 
 
-def _color_key_background(image: Image.Image, tolerance: int, feather: int = 200) -> Image.Image:
-    """Make pixels close to the image's dominant border color transparent,
-    wherever they occur in the image. Unlike a flood fill from the corners,
-    this also clears background trapped in pockets fully enclosed by the
-    subject (between paws, between legs, between letters of outlined text)
-    since it doesn't rely on being reachable from the edge.
+def _color_key_background(image: Image.Image, tolerance: int) -> Image.Image:
+    """Make every pixel close to the image's dominant border color
+    transparent, wherever it occurs in the image. Unlike a flood fill from
+    the corners, this also clears background trapped in pockets fully
+    enclosed by the subject (between paws, between legs, between letters of
+    outlined text) since it doesn't rely on being reachable from the edge.
 
-    Pixels are ramped from fully transparent (color distance <= tolerance)
-    to fully opaque (distance >= tolerance + feather) instead of a hard
-    cutoff, and partially-transparent edge pixels are "despilled" - their
-    color is pulled back out of its blend with the background - so the
-    anti-aliased transition band around outlines and text doesn't leave a
-    visible ring tinted with the background color."""
+    The cutoff is a hard one (not a soft, wider ramp) on purpose: a subject
+    can legitimately use a color that sits fairly close to the background in
+    this simple distance metric (a pastel prop on a pastel background, a
+    muted blanket pattern), and a wide soft-transparency band would have
+    partially erased exactly that content instead of just smoothing
+    anti-aliased edges. See `_resize_premultiplied` for how edge fringing
+    from background color bleed is handled instead, at resize time.
+
+    The resulting mask is then despeckled with a median filter: a photo of a
+    hand-drawn background picks up grain/shading noise that pushes a
+    scattered few percent of true-background pixels just outside the
+    tolerance, which would otherwise show up as light flecks across what
+    should be a clean transparent area. A 3x3 median only flips a pixel
+    whose neighborhood disagrees with it, so it cleans up that kind of
+    isolated misclassification without touching real foreground shapes,
+    which are many pixels wide."""
     img = image.convert("RGBA")
     ref = _dominant_border_color(img)
 
@@ -84,15 +94,41 @@ def _color_key_background(image: Image.Image, tolerance: int, feather: int = 200
     ref_arr = np.array(ref, dtype=np.float32)
 
     dist = np.abs(rgb - ref_arr).sum(axis=2)
-    frac = np.clip((dist - tolerance) / feather, 0.0, 1.0)  # 0=background, 1=foreground
-    new_alpha = alpha * frac
+    is_background = dist <= tolerance
+    mask_img = Image.fromarray((is_background * 255).astype(np.uint8), mode="L")
+    mask_img = mask_img.filter(ImageFilter.MedianFilter(3))
+    is_background = np.asarray(mask_img) > 127
 
-    safe_frac = np.clip(frac, 0.15, 1.0)[..., None]
-    despilled = np.clip(ref_arr + (rgb - ref_arr) / safe_frac, 0, 255)
-    edge = (frac > 0) & (frac < 1)
-    out_rgb = np.where(edge[..., None], despilled, rgb)
+    new_alpha = np.where(is_background, 0.0, alpha)
+    out = np.dstack([rgb, new_alpha]).astype(np.uint8)
+    return Image.fromarray(out, mode="RGBA")
 
-    out = np.dstack([out_rgb, new_alpha]).astype(np.uint8)
+
+def _resize_premultiplied(img: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """Resize an RGBA image the way `Image.resize` does not: with RGB
+    premultiplied by alpha beforehand (and divided back out after). Plain
+    per-channel resampling blends each channel independently, so a fully
+    transparent pixel's leftover background color still gets mixed into a
+    neighboring semi-transparent edge pixel's RGB during the resize's
+    interpolation - visible as a thin ring tinted with the background color
+    around every outline once the sticker is scaled up onto its canvas.
+    Premultiplying first means a transparent pixel contributes zero color to
+    that blend, matching how compositing actually works."""
+    arr = np.asarray(img.convert("RGBA")).astype(np.float32)
+    rgb, alpha = arr[..., :3], arr[..., 3:4]
+    premultiplied = (rgb * (alpha / 255.0)).astype(np.uint8)
+
+    premultiplied_resized = np.asarray(
+        Image.fromarray(premultiplied, mode="RGB").resize(size, Image.LANCZOS)
+    ).astype(np.float32)
+    alpha_resized = np.asarray(
+        Image.fromarray(alpha[..., 0].astype(np.uint8), mode="L").resize(size, Image.LANCZOS)
+    ).astype(np.float32)
+
+    safe_alpha = np.clip(alpha_resized, 1, 255)[..., None]
+    rgb_resized = np.clip(premultiplied_resized * 255.0 / safe_alpha, 0, 255)
+
+    out = np.dstack([rgb_resized, alpha_resized]).astype(np.uint8)
     return Image.fromarray(out, mode="RGBA")
 
 
@@ -105,7 +141,7 @@ def fit_to_canvas(image: Image.Image, canvas_size: tuple[int, int]) -> Image.Ima
     src_w, src_h = img.size
     scale = min(target_w / src_w, target_h / src_h)
     new_w, new_h = max(1, round(src_w * scale)), max(1, round(src_h * scale))
-    resized = img.resize((new_w, new_h), Image.LANCZOS)
+    resized = _resize_premultiplied(img, (new_w, new_h))
 
     canvas = Image.new("RGBA", canvas_size, (0, 0, 0, 0))
     offset = ((target_w - new_w) // 2, (target_h - new_h) // 2)
@@ -197,7 +233,7 @@ def fit_to_canvas_with_caption(
     max_scale = min(target_w / src_w, max(1, target_h - reserved_h) / src_h)
     scale = min(scale, max_scale)
     new_w, new_h = max(1, round(src_w * scale)), max(1, round(src_h * scale))
-    resized = img.resize((new_w, new_h), Image.LANCZOS)
+    resized = _resize_premultiplied(img, (new_w, new_h))
 
     # Anchor the artwork right under the caption (instead of centering it in
     # the leftover space) so text and image sit close together, with any
