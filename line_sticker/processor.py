@@ -64,6 +64,9 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
     return tuple(sum(c[i] for c in best) // len(best) for i in range(3))
 
 
+_FRINGE_GAP_CLOSE = 3
+
+
 def _color_key_background(
     image: Image.Image,
     tolerance: int,
@@ -100,25 +103,27 @@ def _color_key_background(
     and a large enclosed blob is left alone rather than risk erasing real
     content.
 
-    Finally, a ring (`fringe_width` pixels, 8-connected so it reaches
-    diagonally too) just outside the now-cleared background is swept at a
-    looser `fringe_tolerance`, to catch the anti-aliased blend band around
-    an outline that a tight `tolerance` alone leaves behind as a visible
-    color-tinted edge. For clean vector art that band is only a couple of
-    pixels wide, but hand-drawn/colored-pencil style art can fade from pure
-    background to the outline's own dark ink over 15-20px (a soft
-    pencil-texture gradient, not a hard antialiased edge), so `fringe_width`
-    has to reach that far to fully clear it. But `fringe_tolerance` can't be
-    as loose as the reach is wide: a flat, moderately-pale fill on a nearby
-    prop (a bowl's grey, a pillow's cream) can sit at a similar color
-    distance from the background as the far end of a true anti-aliased
-    blend, and with `fringe_width` wide enough to reach clear across a
-    small prop, a loose `fringe_tolerance` would erase that prop's fill
-    wholesale instead of just trimming a thin rim around it. Keeping
-    `fringe_tolerance` well under the distance a flat pale fill typically
-    sits at - even though that leaves the very last sliver of the darkest
-    part of a wide blend untouched - trades a barely-visible hairline for
-    not eating real content, which is the safer failure mode."""
+    Finally, the cut edge is swept outward up to `fringe_width` pixels, to
+    catch the anti-aliased blend band around an outline that a tight
+    `tolerance` alone leaves behind as a visible color-tinted edge (hand-drawn
+    pencil art can fade from pure background to the outline's dark ink over
+    15-20px). Three things keep this from eating real content:
+
+    - It only grows through pixels within `fringe_tolerance` of the
+      background, one step at a time from the already-cleared area, so a dark
+      outline stops it instead of letting it jump across to the fill behind.
+      Hand-drawn outlines have small breaks, so the barrier is first closed
+      over gaps of a few pixels; otherwise it leaks through a break and eats
+      a diamond-shaped hole in the fill.
+    - `fringe_tolerance` is capped at half the color distance from the
+      background to pure white. A pale background (mint, cream) sits close to
+      white fur or a pastel prop, so the same absolute tolerance that is safe
+      on a vivid blue background would reach right into them; scaling to the
+      background keeps the sweep short of the lightest content in any case.
+    - It is kept well under the distance a flat pale fill (a bowl's grey, a
+      pillow's cream) sits at, accepting a barely visible hairline left on
+      the darkest part of a wide blend over erasing real fill, the safer
+      failure."""
     img = image.convert("RGBA")
     ref = _dominant_border_color(img)
 
@@ -140,11 +145,21 @@ def _color_key_background(
     removable_labels.update(i + 1 for i, size in enumerate(sizes) if size <= max_enclosed_size)
     is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
 
-    dilated = ndimage.binary_dilation(
-        is_background, iterations=fringe_width, structure=np.ones((3, 3), dtype=bool)
+    white_distance = float(np.abs(255.0 - ref_arr).sum())
+    loose = dist <= min(fringe_tolerance, white_distance / 2)
+    barrier = ~loose & ~is_background
+    pad = _FRINGE_GAP_CLOSE + 1
+    barrier = ndimage.binary_closing(
+        np.pad(barrier, pad, mode="edge"),
+        structure=np.ones((3, 3), dtype=bool),
+        iterations=_FRINGE_GAP_CLOSE,
+    )[pad:-pad, pad:-pad]
+    is_background = ndimage.binary_dilation(
+        is_background,
+        structure=ndimage.generate_binary_structure(2, 1),
+        iterations=fringe_width,
+        mask=(loose & ~barrier) | is_background,
     )
-    fringe = dilated & ~is_background & (dist <= fringe_tolerance)
-    is_background = is_background | fringe
 
     new_alpha = np.where(is_background, 0.0, alpha)
     out = np.dstack([rgb, new_alpha]).astype(np.uint8)
