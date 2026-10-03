@@ -68,7 +68,7 @@ def _color_key_background(
     image: Image.Image,
     tolerance: int,
     max_enclosed_size: int = 800,
-    fringe_width: int = 5,
+    fringe_width: int = 20,
     fringe_tolerance: int = 290,
 ) -> Image.Image:
     """Make background-colored pixels transparent, but only the ones
@@ -100,18 +100,22 @@ def _color_key_background(
     and a large enclosed blob is left alone rather than risk erasing real
     content.
 
-    Finally, a thin ring (`fringe_width` pixels) just outside the now-cleared
-    background is swept at a much looser `fringe_tolerance`, to catch the
-    anti-aliased blend band around an outline that a tight `tolerance` alone
-    leaves behind as a visible color-tinted edge (white blended with a bright
-    background can land surprisingly far away in this simple distance
-    metric). Gating this on actual adjacency to already-removed background -
-    rather than raising `tolerance` itself - is what keeps it from eating a
-    pastel subject detail of a similar color a few pixels further in: a
-    multi-pixel-wide fill (a blanket, a towel stripe) extends well past a
-    handful of pixels from the cut line, so only its outermost sliver, if
-    any, is ever at risk, while the 1-3px anti-aliased blend band around an
-    outline is exactly this wide and gets fully cleared."""
+    Finally, a ring (`fringe_width` pixels, 8-connected so it reaches
+    diagonally too) just outside the now-cleared background is swept at a
+    much looser `fringe_tolerance`, to catch the anti-aliased blend band
+    around an outline that a tight `tolerance` alone leaves behind as a
+    visible color-tinted edge. For clean vector art that band is only a
+    couple of pixels wide, but hand-drawn/colored-pencil style art can fade
+    from pure background to the outline's own dark ink over 15-20px (a soft
+    pencil-texture gradient, not a hard antialiased edge), so `fringe_width`
+    has to reach that far to fully clear it. Gating this on actual adjacency
+    to already-removed background - rather than raising `tolerance` itself -
+    is what keeps it from eating a pastel subject detail of a similar color
+    a few pixels further in: a multi-pixel-wide fill (a blanket, a towel
+    stripe) extends well past `fringe_width` pixels from the cut line, so
+    only its outermost sliver is ever at risk, while the gradual blend band
+    around an outline sits entirely within that reach and gets fully
+    cleared."""
     img = image.convert("RGBA")
     ref = _dominant_border_color(img)
 
@@ -133,7 +137,9 @@ def _color_key_background(
     removable_labels.update(i + 1 for i, size in enumerate(sizes) if size <= max_enclosed_size)
     is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
 
-    dilated = ndimage.binary_dilation(is_background, iterations=fringe_width)
+    dilated = ndimage.binary_dilation(
+        is_background, iterations=fringe_width, structure=np.ones((3, 3), dtype=bool)
+    )
     fringe = dilated & ~is_background & (dist <= fringe_tolerance)
     is_background = is_background | fringe
 
