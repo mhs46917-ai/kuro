@@ -64,7 +64,13 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
     return tuple(sum(c[i] for c in best) // len(best) for i in range(3))
 
 
-def _color_key_background(image: Image.Image, tolerance: int, max_enclosed_size: int = 800) -> Image.Image:
+def _color_key_background(
+    image: Image.Image,
+    tolerance: int,
+    max_enclosed_size: int = 800,
+    fringe_width: int = 5,
+    fringe_tolerance: int = 290,
+) -> Image.Image:
     """Make background-colored pixels transparent, but only the ones
     actually connected to the image's border through other background-
     colored pixels - not every pixel that merely happens to be close to the
@@ -94,8 +100,18 @@ def _color_key_background(image: Image.Image, tolerance: int, max_enclosed_size:
     and a large enclosed blob is left alone rather than risk erasing real
     content.
 
-    See `_resize_premultiplied` for how edge fringing from background color
-    bleed is handled, at resize time rather than here."""
+    Finally, a thin ring (`fringe_width` pixels) just outside the now-cleared
+    background is swept at a much looser `fringe_tolerance`, to catch the
+    anti-aliased blend band around an outline that a tight `tolerance` alone
+    leaves behind as a visible color-tinted edge (white blended with a bright
+    background can land surprisingly far away in this simple distance
+    metric). Gating this on actual adjacency to already-removed background -
+    rather than raising `tolerance` itself - is what keeps it from eating a
+    pastel subject detail of a similar color a few pixels further in: a
+    multi-pixel-wide fill (a blanket, a towel stripe) extends well past a
+    handful of pixels from the cut line, so only its outermost sliver, if
+    any, is ever at risk, while the 1-3px anti-aliased blend band around an
+    outline is exactly this wide and gets fully cleared."""
     img = image.convert("RGBA")
     ref = _dominant_border_color(img)
 
@@ -116,6 +132,10 @@ def _color_key_background(image: Image.Image, tolerance: int, max_enclosed_size:
     removable_labels = set(border_labels)
     removable_labels.update(i + 1 for i, size in enumerate(sizes) if size <= max_enclosed_size)
     is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
+
+    dilated = ndimage.binary_dilation(is_background, iterations=fringe_width)
+    fringe = dilated & ~is_background & (dist <= fringe_tolerance)
+    is_background = is_background | fringe
 
     new_alpha = np.where(is_background, 0.0, alpha)
     out = np.dstack([rgb, new_alpha]).astype(np.uint8)
