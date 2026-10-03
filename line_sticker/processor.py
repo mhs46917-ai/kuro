@@ -69,7 +69,7 @@ def _color_key_background(
     tolerance: int,
     max_enclosed_size: int = 800,
     fringe_width: int = 20,
-    fringe_tolerance: int = 290,
+    fringe_tolerance: int = 180,
 ) -> Image.Image:
     """Make background-colored pixels transparent, but only the ones
     actually connected to the image's border through other background-
@@ -102,20 +102,23 @@ def _color_key_background(
 
     Finally, a ring (`fringe_width` pixels, 8-connected so it reaches
     diagonally too) just outside the now-cleared background is swept at a
-    much looser `fringe_tolerance`, to catch the anti-aliased blend band
-    around an outline that a tight `tolerance` alone leaves behind as a
-    visible color-tinted edge. For clean vector art that band is only a
-    couple of pixels wide, but hand-drawn/colored-pencil style art can fade
-    from pure background to the outline's own dark ink over 15-20px (a soft
+    looser `fringe_tolerance`, to catch the anti-aliased blend band around
+    an outline that a tight `tolerance` alone leaves behind as a visible
+    color-tinted edge. For clean vector art that band is only a couple of
+    pixels wide, but hand-drawn/colored-pencil style art can fade from pure
+    background to the outline's own dark ink over 15-20px (a soft
     pencil-texture gradient, not a hard antialiased edge), so `fringe_width`
-    has to reach that far to fully clear it. Gating this on actual adjacency
-    to already-removed background - rather than raising `tolerance` itself -
-    is what keeps it from eating a pastel subject detail of a similar color
-    a few pixels further in: a multi-pixel-wide fill (a blanket, a towel
-    stripe) extends well past `fringe_width` pixels from the cut line, so
-    only its outermost sliver is ever at risk, while the gradual blend band
-    around an outline sits entirely within that reach and gets fully
-    cleared."""
+    has to reach that far to fully clear it. But `fringe_tolerance` can't be
+    as loose as the reach is wide: a flat, moderately-pale fill on a nearby
+    prop (a bowl's grey, a pillow's cream) can sit at a similar color
+    distance from the background as the far end of a true anti-aliased
+    blend, and with `fringe_width` wide enough to reach clear across a
+    small prop, a loose `fringe_tolerance` would erase that prop's fill
+    wholesale instead of just trimming a thin rim around it. Keeping
+    `fringe_tolerance` well under the distance a flat pale fill typically
+    sits at - even though that leaves the very last sliver of the darkest
+    part of a wide blend untouched - trades a barely-visible hairline for
+    not eating real content, which is the safer failure mode."""
     img = image.convert("RGBA")
     ref = _dominant_border_color(img)
 
