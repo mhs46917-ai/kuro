@@ -65,6 +65,7 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
 
 
 _FRINGE_GAP_CLOSE = 3
+_MIN_FRINGE_TOLERANCE = 90
 
 
 def _color_key_background(
@@ -120,6 +121,12 @@ def _color_key_background(
       white fur or a pastel prop, so the same absolute tolerance that is safe
       on a vivid blue background would reach right into them; scaling to the
       background keeps the sweep short of the lightest content in any case.
+    - On a pale background the sweep is skipped altogether (when the capped
+      tolerance is under `_MIN_FRINGE_TOLERANCE`). Content there - an
+      off-white bag, a grey mat - sits only a few units past `tolerance`
+      from the background, so no sweep tolerance can both reach a blend band
+      and spare it, while a pale background's blend band is barely visible
+      anyway.
     - It is kept well under the distance a flat pale fill (a bowl's grey, a
       pillow's cream) sits at, accepting a barely visible hairline left on
       the darkest part of a wide blend over erasing real fill, the safer
@@ -145,21 +152,22 @@ def _color_key_background(
     removable_labels.update(i + 1 for i, size in enumerate(sizes) if size <= max_enclosed_size)
     is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
 
-    white_distance = float(np.abs(255.0 - ref_arr).sum())
-    loose = dist <= min(fringe_tolerance, white_distance / 2)
-    barrier = ~loose & ~is_background
-    pad = _FRINGE_GAP_CLOSE + 1
-    barrier = ndimage.binary_closing(
-        np.pad(barrier, pad, mode="edge"),
-        structure=np.ones((3, 3), dtype=bool),
-        iterations=_FRINGE_GAP_CLOSE,
-    )[pad:-pad, pad:-pad]
-    is_background = ndimage.binary_dilation(
-        is_background,
-        structure=ndimage.generate_binary_structure(2, 1),
-        iterations=fringe_width,
-        mask=(loose & ~barrier) | is_background,
-    )
+    fringe_limit = min(fringe_tolerance, float(np.abs(255.0 - ref_arr).sum()) / 2)
+    if fringe_limit >= _MIN_FRINGE_TOLERANCE and fringe_width > 0:
+        loose = dist <= fringe_limit
+        barrier = ~loose & ~is_background
+        pad = _FRINGE_GAP_CLOSE + 1
+        barrier = ndimage.binary_closing(
+            np.pad(barrier, pad, mode="edge"),
+            structure=np.ones((3, 3), dtype=bool),
+            iterations=_FRINGE_GAP_CLOSE,
+        )[pad:-pad, pad:-pad]
+        is_background = ndimage.binary_dilation(
+            is_background,
+            structure=ndimage.generate_binary_structure(2, 1),
+            iterations=fringe_width,
+            mask=(loose & ~barrier) | is_background,
+        )
 
     new_alpha = np.where(is_background, 0.0, alpha)
     out = np.dstack([rgb, new_alpha]).astype(np.uint8)
