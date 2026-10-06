@@ -44,7 +44,10 @@ def fill(template, row):
     out = []
     for line in template.splitlines():
         if "(表情)" in line:
-            line = line.replace("(表情)", row["face"])
+            if row["face"] == "変えない":
+                line = line.split(":")[0] + ":変えない"
+            else:
+                line = line.replace("(表情)", row["face"])
         elif "(腕)" in line:
             if row["arm"] == "変えない":
                 line = line.split(":")[0] + ":変えない"
