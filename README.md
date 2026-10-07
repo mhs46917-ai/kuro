@@ -7,6 +7,8 @@ note記事の執筆と、日々の作業（画像・データ抽出・Excel分�
 ```
 note/
   STYLE.md        文体・トンマナのルール（最重要。ここを更新すると全記事に効く）
+  VOICE.md        話し方・考え方の癖（STYLE.md の補足）
+  samples/        話し方の素材（音声入力の文字起こしなど）
   MONETIZATION.md 公開範囲（無料/有料）の方針。個人特定リスクの扱いもここ
   CONTENT_PLAN.md 連載・有料記事・ストックアイデアの一覧
   ANALYTICS.md    数字の記録。次回はここと比較する
