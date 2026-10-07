@@ -8,6 +8,7 @@ for arg in sys.argv[1:]:
     s = src.read_text(encoding="utf-8")
     s = re.sub(r"\A---\n.*?\n---\n", "", s, flags=re.S)
     s = re.sub(r"<!--.*?-->", "", s, flags=re.S)
+    s = re.sub(r"^#\s*本文\s*$", "", s, flags=re.M)
     s = re.sub(r"^#+\s+", "", s, flags=re.M)
     s = re.sub(r"^---$", "", s, flags=re.M)
     s = re.sub(r"\n{3,}", "\n\n", s).strip() + "\n"
