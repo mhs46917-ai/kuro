@@ -174,15 +174,12 @@ def _color_key_background(
     return Image.fromarray(out, mode="RGBA")
 
 
-def crop_to_content(image: Image.Image, margin: int = 4, max_edge_speck: int = 400) -> Image.Image:
-    """Crop a background-removed image to its visible content plus `margin`.
-
-    Small opaque pieces touching the image edge (at most `max_edge_speck`
-    pixels) are treated as leftover background and cleared first: real
-    content is rarely a sliver cut by the frame, while a leftover corner of
-    vignette or compression rim would otherwise stretch the crop box back
-    out to the whole frame. Larger edge-touching pieces (a blanket running
-    off the frame) are kept."""
+def clear_edge_specks(image: Image.Image, max_size: int = 400) -> Image.Image:
+    """Clear small opaque pieces (at most `max_size` pixels) touching the image
+    edge. After background removal these are leftover background - a corner of
+    vignette, a compression rim - since real content is rarely a sliver cut by
+    the frame. Larger edge-touching pieces (a blanket running off the frame)
+    are kept."""
     img = image.convert("RGBA")
     alpha = np.asarray(img.getchannel("A")) > 0
     labeled, count = ndimage.label(alpha, structure=np.ones((3, 3), dtype=int))
@@ -191,23 +188,30 @@ def crop_to_content(image: Image.Image, margin: int = 4, max_edge_speck: int = 4
     edge = set(np.unique(labeled[0])) | set(np.unique(labeled[-1])) | set(np.unique(labeled[:, 0])) | set(np.unique(labeled[:, -1]))
     edge.discard(0)
     sizes = ndimage.sum(alpha, labeled, index=np.arange(1, count + 1))
-    specks = [label for label in edge if sizes[label - 1] <= max_edge_speck]
-    if specks:
-        alpha = alpha & ~np.isin(labeled, specks)
-        arr = np.asarray(img).copy()
-        arr[..., 3] = np.where(alpha, arr[..., 3], 0)
-        img = Image.fromarray(arr, mode="RGBA")
+    specks = [label for label in edge if sizes[label - 1] <= max_size]
+    if not specks:
+        return img
+    arr = np.asarray(img).copy()
+    arr[..., 3] = np.where(np.isin(labeled, specks), 0, arr[..., 3])
+    return Image.fromarray(arr, mode="RGBA")
+
+
+def crop_to_content(image: Image.Image, margin: int = 4) -> Image.Image:
+    """Crop a background-removed image to its visible content plus `margin`,
+    after clearing edge specks so a leftover corner can't stretch the crop box
+    back out to the whole frame."""
+    img = clear_edge_specks(image)
+    alpha = np.asarray(img.getchannel("A")) > 0
     ys, xs = np.where(alpha)
     if len(ys) == 0:
         return img
     h, w = alpha.shape
-    box = (
+    return img.crop((
         max(0, xs.min() - margin),
         max(0, ys.min() - margin),
         min(w, xs.max() + 1 + margin),
         min(h, ys.max() + 1 + margin),
-    )
-    return img.crop(box)
+    ))
 
 
 def _resize_premultiplied(img: Image.Image, size: tuple[int, int]) -> Image.Image:

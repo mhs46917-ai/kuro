@@ -17,6 +17,7 @@ from .constants import (
     TAB_SIZE,
 )
 from .processor import (
+    clear_edge_specks,
     crop_to_content,
     fit_to_canvas,
     fit_to_canvas_with_caption,
@@ -63,7 +64,8 @@ def _parse_text_specs(specs: tuple[str, ...]) -> dict[int, str]:
 @click.option("--trim", type=int, default=0, show_default=True,
               help="Pixels to shave off every edge of each input before background removal. Generated "
                    "images often have a 1-2px darker rim from compression that otherwise survives as a "
-                   "stray line along the cut-out's border.")
+                   "stray line along the cut-out's border. When set, small leftover pieces still touching the "
+                   "edge after removal are cleared too.")
 @click.option("--crop-to-content", "crop_to_content_flag", is_flag=True, default=False,
               help="After background removal, crop each image to its visible content (plus a small margin) "
                    "before fitting it to the canvas, so a small subject on a large empty frame fills the sticker.")
@@ -133,6 +135,8 @@ def process(
         if not no_bg_removal:
             img = remove_background(img, tolerance=tolerance)
         img = img.convert("RGBA")
+        if trim > 0 and not no_bg_removal:
+            img = clear_edge_specks(img)
         if crop_to_content_flag:
             img = crop_to_content(img)
         return img
