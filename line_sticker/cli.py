@@ -17,6 +17,7 @@ from .constants import (
     TAB_SIZE,
 )
 from .processor import (
+    crop_to_content,
     fit_to_canvas,
     fit_to_canvas_with_caption,
     find_input_images,
@@ -59,6 +60,13 @@ def _parse_text_specs(specs: tuple[str, ...]) -> dict[int, str]:
               help="Skip background removal; images are assumed already transparent.")
 @click.option("--tolerance", type=int, default=30, show_default=True,
               help="Flood-fill color tolerance used by the fallback background remover.")
+@click.option("--trim", type=int, default=0, show_default=True,
+              help="Pixels to shave off every edge of each input before background removal. Generated "
+                   "images often have a 1-2px darker rim from compression that otherwise survives as a "
+                   "stray line along the cut-out's border.")
+@click.option("--crop-to-content", "crop_to_content_flag", is_flag=True, default=False,
+              help="After background removal, crop each image to its visible content (plus a small margin) "
+                   "before fitting it to the canvas, so a small subject on a large empty frame fills the sticker.")
 @click.option("--keep-dir", type=click.Path(path_type=Path), default=None,
               help="Also keep the generated PNGs in this directory (in addition to the ZIP).")
 @click.option("--text", "text_specs", multiple=True,
@@ -82,6 +90,8 @@ def process(
     tab_source: Path | None,
     no_bg_removal: bool,
     tolerance: int,
+    trim: int,
+    crop_to_content_flag: bool,
     keep_dir: Path | None,
     text_specs: tuple[str, ...],
     font_path: Path | None,
@@ -117,9 +127,15 @@ def process(
 
     def load_processed(path: Path) -> Image.Image:
         img = Image.open(path)
+        if trim > 0:
+            w, h = img.size
+            img = img.crop((trim, trim, w - trim, h - trim))
         if not no_bg_removal:
             img = remove_background(img, tolerance=tolerance)
-        return img.convert("RGBA")
+        img = img.convert("RGBA")
+        if crop_to_content_flag:
+            img = crop_to_content(img)
+        return img
 
     click.echo(f"Processing {len(images)} sticker(s)...")
     sticker_paths: list[Path] = []
