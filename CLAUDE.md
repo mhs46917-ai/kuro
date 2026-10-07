@@ -14,6 +14,8 @@
 | `note/CONTENT_PLAN.md` | 既出・下書き・ストックの一覧。論点の重複を避けるため |
 | `note/templates/06-aruaru.md` | 短編の型。**いまは短編（1,000〜1,500字）が標準** |
 
+**書き方の基準は #3 温度版（`note/articles/aruaru/03-chukan.md`）。** 問いかけで始め、みんなにわかる例えを1つ入れて締めまで通し、語尾を混ぜる。新しい記事はこれに合わせる。
+
 長編（体験談・連載）のときは `note/templates/05-essay.md` と `note/articles/shokureki-series/OUTLINE.md` も読む。
 
 ## 絶対に守ること
