@@ -18,10 +18,11 @@ CHARACTERS = [
     ("chibi-kobuta", "kobuta"),
     ("chibi-shirobunchou", "bunchou"),
     ("chibi-nikuman", "nikuman"),
+    ("onigiri-zeki", "onigiri"),
 ]
 
 # 体にかぶせる・巻く小物は「キャラクターに重ねない」と矛盾するので注記を外す
-WRAP_WORDS = re.compile(r"かける|かぶ|巻く|入れる|帽|くるま|つもる")
+WRAP_WORDS = re.compile(r"かける|かぶ|巻く|入れる|帽|くるま|つもる|突起")
 
 
 def read_template(text):
@@ -76,19 +77,20 @@ def main():
         name = re.match(r"# (.+?)（", readme).group(1)
         template = read_template(readme)
         pack, rows = read_pack(readme)
-        assert len(rows) == 36, (folder, len(rows))
+        assert rows, folder
+        ref = next(p.name for p in sorted((ROOT / "docs" / folder).glob("ref_edit_base.*")))
         items = [
             {**r, "file": f"{key}_{int(r['no']):02d}.jpg", "prompt": fill(template, r)}
             for r in rows
         ]
-        data.append({"key": key, "folder": folder, "name": name, "pack": pack, "items": items})
+        data.append({"key": key, "folder": folder, "name": name, "pack": pack, "ref": ref, "items": items})
 
         md = [
             f"# {name}【{pack}】 Gemini用プロンプト（1枚ずつ）",
             "",
             "`tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。",
             "",
-            f"- 毎回新しいチャットに `docs/{folder}/ref_edit_base.jpg` だけを添付し、1つ貼る",
+            f"- 毎回新しいチャットに `docs/{folder}/{ref}` だけを添付し、1つ貼る",
             "- 保存名は各見出しの右のファイル名にそろえると、後処理で番号順に並べやすい",
             "",
         ]
