@@ -2,10 +2,12 @@
 
 `tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。
 
-- 毎回新しいチャットに `docs/chibi-hamster/ref_edit_base.jpg` だけを添付し、1つ貼る
+- 毎回新しいチャットに、各見出しの下にある添付画像だけを添付し、1つ貼る
 - 保存名は各見出しの右のファイル名にそろえると、後処理で番号順に並べやすい
 
 ## 1. うん　→ `hamster_01.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -29,6 +31,8 @@
 
 ## 2. はーい　→ `hamster_02.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -50,6 +54,8 @@
 ```
 
 ## 3. おけ　→ `hamster_03.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -73,6 +79,8 @@
 
 ## 4. いいよ　→ `hamster_04.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -94,6 +102,8 @@
 ```
 
 ## 5. へぇ〜　→ `hamster_05.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -117,6 +127,8 @@
 
 ## 6. ほんと？　→ `hamster_06.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -138,6 +150,8 @@
 ```
 
 ## 7. ふむふむ　→ `hamster_07.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -161,6 +175,8 @@
 
 ## 8. たしかに　→ `hamster_08.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -182,6 +198,8 @@
 ```
 
 ## 9. それで？　→ `hamster_09.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -205,6 +223,8 @@
 
 ## 10. すごい！　→ `hamster_10.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -226,6 +246,8 @@
 ```
 
 ## 11. えらい！　→ `hamster_11.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -249,6 +271,8 @@
 
 ## 12. さすが　→ `hamster_12.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -270,6 +294,8 @@
 ```
 
 ## 13. おめでとう　→ `hamster_13.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -293,6 +319,8 @@
 
 ## 14. ナイス！　→ `hamster_14.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -314,6 +342,8 @@
 ```
 
 ## 15. あとでね　→ `hamster_15.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -337,6 +367,8 @@
 
 ## 16. ふーん　→ `hamster_16.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -358,6 +390,8 @@
 ```
 
 ## 17. いま無理　→ `hamster_17.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -381,6 +415,8 @@
 
 ## 18. 考えとく　→ `hamster_18.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -402,6 +438,8 @@
 ```
 
 ## 19. どっちでも　→ `hamster_19.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -425,6 +463,8 @@
 
 ## 20. まかせて　→ `hamster_20.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -446,6 +486,8 @@
 ```
 
 ## 21. ちがうよ　→ `hamster_21.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -469,6 +511,8 @@
 
 ## 22. ないない　→ `hamster_22.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -490,6 +534,8 @@
 ```
 
 ## 23. えっ　→ `hamster_23.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -513,6 +559,8 @@
 
 ## 24. ほっ　→ `hamster_24.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -534,6 +582,8 @@
 ```
 
 ## 25. ふふっ　→ `hamster_25.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -557,6 +607,8 @@
 
 ## 26. わはは　→ `hamster_26.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -578,6 +630,8 @@
 ```
 
 ## 27. しーん　→ `hamster_27.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -601,6 +655,8 @@
 
 ## 28. ぽかーん　→ `hamster_28.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -622,6 +678,8 @@
 ```
 
 ## 29. むー　→ `hamster_29.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -645,6 +703,8 @@
 
 ## 30. じー　→ `hamster_30.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -666,6 +726,8 @@
 ```
 
 ## 31. うんうん　→ `hamster_31.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -689,6 +751,8 @@
 
 ## 32. ねー！　→ `hamster_32.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -710,6 +774,8 @@
 ```
 
 ## 33. そっか　→ `hamster_33.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -733,6 +799,8 @@
 
 ## 34. だよね　→ `hamster_34.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -755,6 +823,8 @@
 
 ## 35. もちろん　→ `hamster_35.jpg`
 
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -776,6 +846,8 @@
 ```
 
 ## 36. またね　→ `hamster_36.jpg`
+
+添付：`docs/chibi-hamster/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。

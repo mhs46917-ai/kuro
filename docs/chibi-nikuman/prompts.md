@@ -2,10 +2,12 @@
 
 `tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。
 
-- 毎回新しいチャットに `docs/chibi-nikuman/ref_edit_base.jpg` だけを添付し、1つ貼る
+- 毎回新しいチャットに、各見出しの下にある添付画像だけを添付し、1つ貼る
 - 保存名は各見出しの右のファイル名にそろえると、後処理で番号順に並べやすい
 
 ## 1. さむいね　→ `nikuman_01.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -29,6 +31,8 @@
 
 ## 2. さめちゃう…　→ `nikuman_02.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -50,6 +54,8 @@
 ```
 
 ## 3. あったかくしてね　→ `nikuman_03.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -73,6 +79,8 @@
 
 ## 4. ぬくぬく　→ `nikuman_04.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -94,6 +102,8 @@
 ```
 
 ## 5. 出られない　→ `nikuman_05.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -117,6 +127,8 @@
 
 ## 6. ゆきだ！　→ `nikuman_06.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -138,6 +150,8 @@
 ```
 
 ## 7. マフラー巻いた　→ `nikuman_07.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -161,6 +175,8 @@
 
 ## 8. はーっ　→ `nikuman_08.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -182,6 +198,8 @@
 ```
 
 ## 9. つめたい！　→ `nikuman_09.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -205,6 +223,8 @@
 
 ## 10. かぜひいた　→ `nikuman_10.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -226,6 +246,8 @@
 ```
 
 ## 11. あったまる〜　→ `nikuman_11.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -249,6 +271,8 @@
 
 ## 12. ぽかぽか　→ `nikuman_12.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -270,6 +294,8 @@
 ```
 
 ## 13. みかんたべる　→ `nikuman_13.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -293,6 +319,8 @@
 
 ## 14. もう1こ　→ `nikuman_14.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -314,6 +342,8 @@
 ```
 
 ## 15. せいろでぬくぬく　→ `nikuman_15.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -337,6 +367,8 @@
 
 ## 16. 冬眠します　→ `nikuman_16.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -358,6 +390,8 @@
 ```
 
 ## 17. メリークリスマス　→ `nikuman_17.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -381,6 +415,8 @@
 
 ## 18. プレゼント　→ `nikuman_18.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -402,6 +438,8 @@
 ```
 
 ## 19. いい子にしてた　→ `nikuman_19.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -425,6 +463,8 @@
 
 ## 20. サンタまだ？　→ `nikuman_20.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -446,6 +486,8 @@
 ```
 
 ## 21. おおそうじ　→ `nikuman_21.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -469,6 +511,8 @@
 
 ## 22. よいお年を　→ `nikuman_22.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -490,6 +534,8 @@
 ```
 
 ## 23. 今年もありがとう　→ `nikuman_23.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -513,6 +559,8 @@
 
 ## 24. あけましておめでとう　→ `nikuman_24.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -534,6 +582,8 @@
 ```
 
 ## 25. ことしもよろしく　→ `nikuman_25.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -557,6 +607,8 @@
 
 ## 26. 食べすぎた　→ `nikuman_26.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -578,6 +630,8 @@
 ```
 
 ## 27. いい初ゆめ　→ `nikuman_27.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -601,6 +655,8 @@
 
 ## 28. お年玉ほしい　→ `nikuman_28.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -622,6 +678,8 @@
 ```
 
 ## 29. 雪あそび　→ `nikuman_29.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -645,6 +703,8 @@
 
 ## 30. 春まだかな　→ `nikuman_30.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -666,6 +726,8 @@
 ```
 
 ## 31. 手がつめたい　→ `nikuman_31.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -689,6 +751,8 @@
 
 ## 32. おうちがいちばん　→ `nikuman_32.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -710,6 +774,8 @@
 ```
 
 ## 33. 鼻まっか　→ `nikuman_33.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -733,6 +799,8 @@
 
 ## 34. そと出たくない　→ `nikuman_34.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -755,6 +823,8 @@
 
 ## 35. ふかしたて　→ `nikuman_35.jpg`
 
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -776,6 +846,8 @@
 ```
 
 ## 36. 冬もすき　→ `nikuman_36.jpg`
+
+添付：`docs/chibi-nikuman/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。

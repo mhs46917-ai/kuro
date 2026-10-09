@@ -35,8 +35,9 @@ def read_pack(text):
     rows = []
     for line in text.splitlines():
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) == 5 and cells[0].isdigit():
-            rows.append(dict(zip(("no", "word", "face", "arm", "extra"), cells)))
+        # 6列目「ベース」はポーズ別ベース画像を使うキャラだけにある（「基本」なら共通のベース画像）
+        if len(cells) in (5, 6) and cells[0].isdigit():
+            rows.append(dict(zip(("no", "word", "face", "arm", "extra", "base"), cells)))
     rows.sort(key=lambda r: int(r["no"]))
     return title, rows
 
@@ -80,9 +81,16 @@ def main():
         assert rows, folder
         ref = next(p.name for p in sorted((ROOT / "docs" / folder).glob("ref_edit_base.*")))
         items = [
-            {**r, "file": f"{key}_{int(r['no']):02d}.jpg", "prompt": fill(template, r)}
+            {
+                **r,
+                "ref": ref if r.get("base", "基本") == "基本" else r["base"],
+                "file": f"{key}_{int(r['no']):02d}.jpg",
+                "prompt": fill(template, r),
+            }
             for r in rows
         ]
+        for it in items:
+            assert (ROOT / "docs" / folder / it["ref"]).exists(), (folder, it["ref"])
         data.append({"key": key, "folder": folder, "name": name, "pack": pack, "ref": ref, "items": items})
 
         md = [
@@ -90,12 +98,21 @@ def main():
             "",
             "`tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。",
             "",
-            f"- 毎回新しいチャットに `docs/{folder}/{ref}` だけを添付し、1つ貼る",
+            "- 毎回新しいチャットに、各見出しの下にある添付画像だけを添付し、1つ貼る",
             "- 保存名は各見出しの右のファイル名にそろえると、後処理で番号順に並べやすい",
             "",
         ]
         for it in items:
-            md += [f"## {it['no']}. {it['word']}　→ `{it['file']}`", "", "```", it["prompt"], "```", ""]
+            md += [
+                f"## {it['no']}. {it['word']}　→ `{it['file']}`",
+                "",
+                f"添付：`docs/{folder}/{it['ref']}`",
+                "",
+                "```",
+                it["prompt"],
+                "```",
+                "",
+            ]
         (ROOT / "docs" / folder / "prompts.md").write_text("\n".join(md), encoding="utf-8")
 
     if args.json:

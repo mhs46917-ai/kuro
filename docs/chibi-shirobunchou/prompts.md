@@ -2,10 +2,12 @@
 
 `tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。
 
-- 毎回新しいチャットに `docs/chibi-shirobunchou/ref_edit_base.jpg` だけを添付し、1つ貼る
+- 毎回新しいチャットに、各見出しの下にある添付画像だけを添付し、1つ貼る
 - 保存名は各見出しの右のファイル名にそろえると、後処理で番号順に並べやすい
 
 ## 1. ふふふ　→ `bunchou_01.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -28,6 +30,8 @@
 
 ## 2. …知ってた　→ `bunchou_02.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -48,6 +52,8 @@
 ```
 
 ## 3. なるほどね　→ `bunchou_03.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -70,6 +76,8 @@
 
 ## 4. よかろう　→ `bunchou_04.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -90,6 +98,8 @@
 ```
 
 ## 5. 承知した　→ `bunchou_05.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -112,6 +122,8 @@
 
 ## 6. 感謝する　→ `bunchou_06.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -132,6 +144,8 @@
 ```
 
 ## 7. 呼んだ？　→ `bunchou_07.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -154,6 +168,8 @@
 
 ## 8. 待ってたよ　→ `bunchou_08.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -174,6 +190,8 @@
 ```
 
 ## 9. また会えたね　→ `bunchou_09.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -196,6 +214,8 @@
 
 ## 10. 目覚めの時　→ `bunchou_10.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -216,6 +236,8 @@
 ```
 
 ## 11. また夢で　→ `bunchou_11.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -238,6 +260,8 @@
 
 ## 12. それは秘密　→ `bunchou_12.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -258,6 +282,8 @@
 ```
 
 ## 13. ここだけの話　→ `bunchou_13.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -280,6 +306,8 @@
 
 ## 14. 気づいた？　→ `bunchou_14.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -300,6 +328,8 @@
 ```
 
 ## 15. 見えてる　→ `bunchou_15.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -322,6 +352,8 @@
 
 ## 16. すべては予定通り　→ `bunchou_16.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -342,6 +374,8 @@
 ```
 
 ## 17. 運命だね　→ `bunchou_17.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -364,6 +398,8 @@
 
 ## 18. 時は来た　→ `bunchou_18.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -384,6 +420,8 @@
 ```
 
 ## 19. まだその時じゃない　→ `bunchou_19.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -406,6 +444,8 @@
 
 ## 20. 星がそう言ってる　→ `bunchou_20.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -426,6 +466,8 @@
 ```
 
 ## 21. 吉と出た　→ `bunchou_21.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -448,6 +490,8 @@
 
 ## 22. 凶と出た　→ `bunchou_22.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -468,6 +512,8 @@
 ```
 
 ## 23. いい予感　→ `bunchou_23.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -490,6 +536,8 @@
 
 ## 24. 嫌な予感　→ `bunchou_24.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -510,6 +558,8 @@
 ```
 
 ## 25. 気のせいだよ　→ `bunchou_25.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -532,6 +582,8 @@
 
 ## 26. 謎は解けた　→ `bunchou_26.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -552,6 +604,8 @@
 ```
 
 ## 27. おぬし、できるな　→ `bunchou_27.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -574,6 +628,8 @@
 
 ## 28. 何も言うまい　→ `bunchou_28.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -594,6 +650,8 @@
 ```
 
 ## 29. さて、どうかな　→ `bunchou_29.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -616,6 +674,8 @@
 
 ## 30. 聞こえてるよ　→ `bunchou_30.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -636,6 +696,8 @@
 ```
 
 ## 31. おやつの気配がする　→ `bunchou_31.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -658,6 +720,8 @@
 
 ## 32. 消えます　→ `bunchou_32.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -678,6 +742,8 @@
 ```
 
 ## 33. さらば　→ `bunchou_33.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -700,6 +766,8 @@
 
 ## 34. ……　→ `bunchou_34.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -721,6 +789,8 @@
 
 ## 35. フッ　→ `bunchou_35.jpg`
 
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -741,6 +811,8 @@
 ```
 
 ## 36. 今夜は月がきれい　→ `bunchou_36.jpg`
+
+添付：`docs/chibi-shirobunchou/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。

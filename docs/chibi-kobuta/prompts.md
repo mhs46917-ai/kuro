@@ -2,10 +2,12 @@
 
 `tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。
 
-- 毎回新しいチャットに `docs/chibi-kobuta/ref_edit_base.jpg` だけを添付し、1つ貼る
+- 毎回新しいチャットに、各見出しの下にある添付画像だけを添付し、1つ貼る
 - 保存名は各見出しの右のファイル名にそろえると、後処理で番号順に並べやすい
 
 ## 1. おはようございます　→ `kobuta_01.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -28,6 +30,8 @@
 
 ## 2. おつかれさまです　→ `kobuta_02.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -48,6 +52,8 @@
 ```
 
 ## 3. ありがとうございます　→ `kobuta_03.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -70,6 +76,8 @@
 
 ## 4. すみません　→ `kobuta_04.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -90,6 +98,8 @@
 ```
 
 ## 5. 了解です　→ `kobuta_05.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -112,6 +122,8 @@
 
 ## 6. 承知しました　→ `kobuta_06.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -132,6 +144,8 @@
 ```
 
 ## 7. かしこまりました　→ `kobuta_07.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -154,6 +168,8 @@
 
 ## 8. よろしくお願いします　→ `kobuta_08.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -174,6 +190,8 @@
 ```
 
 ## 9. お願いします　→ `kobuta_09.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -196,6 +214,8 @@
 
 ## 10. はい！　→ `kobuta_10.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -216,6 +236,8 @@
 ```
 
 ## 11. 確認します　→ `kobuta_11.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -238,6 +260,8 @@
 
 ## 12. 少々お待ちください　→ `kobuta_12.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -258,6 +282,8 @@
 ```
 
 ## 13. 今向かっています　→ `kobuta_13.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -280,6 +306,8 @@
 
 ## 14. 遅れます　→ `kobuta_14.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -300,6 +328,8 @@
 ```
 
 ## 15. お先に失礼します　→ `kobuta_15.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -322,6 +352,8 @@
 
 ## 16. 失礼します　→ `kobuta_16.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -342,6 +374,8 @@
 ```
 
 ## 17. おやすみなさい　→ `kobuta_17.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -364,6 +398,8 @@
 
 ## 18. いってらっしゃい　→ `kobuta_18.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -384,6 +420,8 @@
 ```
 
 ## 19. おかえりなさい　→ `kobuta_19.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -406,6 +444,8 @@
 
 ## 20. いただきます　→ `kobuta_20.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -426,6 +466,8 @@
 ```
 
 ## 21. ごちそうさまでした　→ `kobuta_21.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -448,6 +490,8 @@
 
 ## 22. 大丈夫です　→ `kobuta_22.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -468,6 +512,8 @@
 ```
 
 ## 23. お気づかいなく　→ `kobuta_23.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -490,6 +536,8 @@
 
 ## 24. 助かります　→ `kobuta_24.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -510,6 +558,8 @@
 ```
 
 ## 25. うれしいです　→ `kobuta_25.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -532,6 +582,8 @@
 
 ## 26. 楽しみです　→ `kobuta_26.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -552,6 +604,8 @@
 ```
 
 ## 27. さすがです　→ `kobuta_27.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -574,6 +628,8 @@
 
 ## 28. すごいです　→ `kobuta_28.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -594,6 +650,8 @@
 ```
 
 ## 29. いいですね　→ `kobuta_29.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -616,6 +674,8 @@
 
 ## 30. おめでとうございます　→ `kobuta_30.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -636,6 +696,8 @@
 ```
 
 ## 31. お大事に　→ `kobuta_31.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -658,6 +720,8 @@
 
 ## 32. ご無理なさらず　→ `kobuta_32.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -678,6 +742,8 @@
 ```
 
 ## 33. ごめんなさい　→ `kobuta_33.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
@@ -700,6 +766,8 @@
 
 ## 34. 恐縮です　→ `kobuta_34.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -721,6 +789,8 @@
 
 ## 35. どうぞ　→ `kobuta_35.jpg`
 
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
+
 ```
 添付画像を編集してください。
 キャラクターを描き直さず、添付画像の線と塗りをそのまま使ってください。
@@ -741,6 +811,8 @@
 ```
 
 ## 36. よい一日を　→ `kobuta_36.jpg`
+
+添付：`docs/chibi-kobuta/ref_edit_base.jpg`
 
 ```
 添付画像を編集してください。
