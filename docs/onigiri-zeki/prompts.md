@@ -1,4 +1,4 @@
-# おにぎり関【どすこい稽古】 Gemini用プロンプト（1枚ずつ）
+# おにぎりきし【どすこい稽古】 Gemini用プロンプト（1枚ずつ）
 
 `tools/build_chibi_prompts.py` でREADMEから自動生成。表を直したら再生成する。
 

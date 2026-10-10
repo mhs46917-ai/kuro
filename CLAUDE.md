@@ -12,7 +12,7 @@
   キャラ固有の仕様とテンプレートは `docs/chibi-hamster/`・`docs/chibi-shirobunchou/`・
   `docs/chibi-kobuta/`・`docs/chibi-nikuman/` の各README.mdを正とする。
   ちびしろたぬき自体は今後パックを作らない）
-- **おにぎり関**（おにぎり×力士モチーフ。ユーザー提供のベース画像から、ちびキャラと同じ編集方式・
+- **おにぎりきし**（おにぎり×力士モチーフ。ユーザー提供のベース画像から、ちびキャラと同じ編集方式・
   後処理で作る。仕様・テンプレート・パック設計は `docs/onigiri-zeki/README.md` を正とする）
 
 詳しい市場調査・仕様確定の経緯は `docs/line-sticker-research.md` にまとめてある
