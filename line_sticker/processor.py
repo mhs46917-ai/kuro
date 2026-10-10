@@ -221,6 +221,96 @@ def crop_to_content(image: Image.Image, margin: int = 4) -> Image.Image:
     ))
 
 
+def clear_specks(image: Image.Image, max_size: int = 12) -> Image.Image:
+    """Clear isolated opaque specks of at most `max_size` pixels anywhere (1-3px
+    JPEG noise that survives background removal), so they neither show up nor
+    stretch the content bounding box."""
+    img = image.convert("RGBA")
+    alpha = np.asarray(img.getchannel("A")) > 0
+    labeled, count = ndimage.label(alpha, structure=np.ones((3, 3), dtype=int))
+    if count == 0:
+        return img
+    sizes = ndimage.sum(alpha, labeled, index=np.arange(1, count + 1))
+    specks = [i + 1 for i, size in enumerate(sizes) if size <= max_size]
+    if not specks:
+        return img
+    arr = np.asarray(img).copy()
+    arr[..., 3] = np.where(np.isin(labeled, specks), 0, arr[..., 3])
+    return Image.fromarray(arr, mode="RGBA")
+
+
+def margin_box(canvas_size: tuple[int, int], margin: float) -> tuple[float, float]:
+    """Inner box left after reserving `margin` (a fraction of each dimension) on every side."""
+    w, h = canvas_size
+    return w * (1 - 2 * margin), h * (1 - 2 * margin)
+
+
+def fit_with_margin(image: Image.Image, canvas_size: tuple[int, int], margin: float) -> Image.Image:
+    """Crop to visible content, then scale it to fit inside the canvas leaving
+    `margin` of each dimension empty on every side, centered. Sizing from the
+    margin instead of a fixed scale gives every sticker the same amount of
+    breathing room whatever the source image's resolution or framing."""
+    img = image.convert("RGBA")
+    bbox = img.getbbox()
+    if bbox is None:
+        return Image.new("RGBA", canvas_size, (0, 0, 0, 0))
+    img = img.crop(bbox)
+    box_w, box_h = margin_box(canvas_size, margin)
+    scale = min(box_w / img.width, box_h / img.height)
+    new_w, new_h = max(1, round(img.width * scale)), max(1, round(img.height * scale))
+    resized = _resize_premultiplied(img, (new_w, new_h))
+    canvas = Image.new("RGBA", canvas_size, (0, 0, 0, 0))
+    canvas.paste(resized, ((canvas_size[0] - new_w) // 2, (canvas_size[1] - new_h) // 2), resized)
+    return canvas
+
+
+def outline_caption(image: Image.Image, radius: float) -> Image.Image:
+    """Put a white outline of `radius` px around caption text drawn into the
+    artwork (dark lettering above the character).
+
+    The caption is found as the topmost line of dark "ink": dark pixels are
+    smeared sideways so a line of glyphs merges into one blob while the
+    character's own outline below stays separate, and the blob holding the
+    topmost ink is the caption. The outline is painted over decorations
+    behind the text (rays, sparkles) but under the text itself, and the
+    text's own background-tinted anti-aliased edge is lightened into white
+    so no ring of the old background shows between text and outline."""
+    img = image.convert("RGBA")
+    pad = int(np.ceil(radius)) + 2
+    padded = Image.new("RGBA", (img.width + 2 * pad, img.height + 2 * pad), (0, 0, 0, 0))
+    padded.paste(img, (pad, pad))
+    arr = np.asarray(padded).astype(np.float32)
+    rgb, a = arr[..., :3], arr[..., 3] / 255
+    opaque = a > 0
+    lum = rgb @ np.array([0.299, 0.587, 0.114], dtype=np.float32)
+    ink = opaque & (lum < 140)
+    labeled, count = ndimage.label(ink, structure=np.ones((3, 3), dtype=int))
+    if count:
+        sizes = ndimage.sum(ink, labeled, index=np.arange(1, count + 1))
+        ink = np.isin(labeled, [i + 1 for i, size in enumerate(sizes) if size >= 10])
+    rows = np.where(ink.any(axis=1))[0]
+    if len(rows) == 0:
+        return img
+    smear = ndimage.binary_dilation(ink, structure=np.ones((3, 25), dtype=bool))
+    blobs, _ = ndimage.label(smear, structure=np.ones((3, 3), dtype=int))
+    top_labels = set(np.unique(blobs[rows[0]][ink[rows[0]]])) - {0}
+    text = ndimage.binary_dilation(ink & np.isin(blobs, list(top_labels)), iterations=2) & opaque
+
+    lighten = np.clip((230 - lum) / 160, 0, 1)[..., None]
+    text_rgb = rgb * lighten + 255 * (1 - lighten)
+    stroke = np.clip(radius + 0.5 - ndimage.distance_transform_edt(~text), 0, 1)
+
+    out_rgb = rgb * (1 - stroke[..., None]) * a[..., None] + 255 * stroke[..., None]
+    out_a = a * (1 - stroke) + stroke
+    t = text & (a > 0)
+    ta = np.where(t, a, 0)
+    out_rgb = text_rgb * ta[..., None] + out_rgb * (1 - ta[..., None])
+    out_a = ta + out_a * (1 - ta)
+    out_rgb = out_rgb / np.maximum(out_a, 1e-6)[..., None]
+    out = np.dstack([out_rgb, out_a * 255]).clip(0, 255).astype(np.uint8)
+    return Image.fromarray(out, mode="RGBA").crop(Image.fromarray(out, mode="RGBA").getbbox())
+
+
 def _resize_premultiplied(img: Image.Image, size: tuple[int, int]) -> Image.Image:
     """Resize an RGBA image the way `Image.resize` does not: with RGB
     premultiplied by alpha beforehand (and divided back out after). Plain

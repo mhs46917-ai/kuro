@@ -18,8 +18,12 @@ from .constants import (
 )
 from .processor import (
     clear_edge_specks,
+    clear_specks,
     crop_to_content,
     fit_to_canvas,
+    fit_with_margin,
+    margin_box,
+    outline_caption,
     fit_to_canvas_with_caption,
     find_input_images,
     remove_background,
@@ -69,6 +73,12 @@ def _parse_text_specs(specs: tuple[str, ...]) -> dict[int, str]:
 @click.option("--crop-to-content", "crop_to_content_flag", is_flag=True, default=False,
               help="After background removal, crop each image to its visible content (plus a small margin) "
                    "before fitting it to the canvas, so a small subject on a large empty frame fills the sticker.")
+@click.option("--margin", type=float, default=None,
+              help="Size each sticker by its empty margin instead of filling the canvas: crop to the "
+                   "visible content and fit it inside the canvas leaving this fraction of each dimension "
+                   "empty on every side (e.g. 0.23).")
+@click.option("--text-outline", type=float, default=0, show_default=True,
+              help="White outline (px at sticker size) around caption text already drawn into the artwork.")
 @click.option("--keep-dir", type=click.Path(path_type=Path), default=None,
               help="Also keep the generated PNGs in this directory (in addition to the ZIP).")
 @click.option("--text", "text_specs", multiple=True,
@@ -94,6 +104,8 @@ def process(
     tolerance: int,
     trim: int,
     crop_to_content_flag: bool,
+    margin: float | None,
+    text_outline: float,
     keep_dir: Path | None,
     text_specs: tuple[str, ...],
     font_path: Path | None,
@@ -139,6 +151,16 @@ def process(
             img = clear_edge_specks(img)
         if crop_to_content_flag:
             img = crop_to_content(img)
+        if margin is not None or text_outline > 0:
+            img = clear_specks(img)
+            img = img.crop(img.getbbox() or (0, 0, img.width, img.height))
+        if text_outline > 0:
+            if margin is not None:
+                box_w, box_h = margin_box(STICKER_MAX_SIZE, margin)
+            else:
+                box_w, box_h = STICKER_MAX_SIZE
+            scale = min(box_w / img.width, box_h / img.height)
+            img = outline_caption(img, text_outline / scale)
         return img
 
     click.echo(f"Processing {len(images)} sticker(s)...")
@@ -160,6 +182,8 @@ def process(
                 text_gap=text_gap,
                 image_scale=image_scale,
             )
+        elif margin is not None:
+            sticker = fit_with_margin(img, STICKER_MAX_SIZE, margin)
         else:
             sticker = fit_to_canvas(img, STICKER_MAX_SIZE)
         out_path = work_dir / f"{idx:02d}.png"
