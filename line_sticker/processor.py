@@ -65,13 +65,15 @@ def _dominant_border_color(img: Image.Image) -> tuple[int, int, int]:
 
 
 _FRINGE_GAP_CLOSE = 3
+# 800px on a ~337px grid cell, the size `max_enclosed_size` was tuned on.
+_ENCLOSED_AREA_FRACTION = 0.007
 _MIN_FRINGE_TOLERANCE = 90
 
 
 def _color_key_background(
     image: Image.Image,
     tolerance: int,
-    max_enclosed_size: int = 800,
+    max_enclosed_size: int | None = None,
     fringe_width: int = 20,
     fringe_tolerance: int = 180,
 ) -> Image.Image:
@@ -102,7 +104,9 @@ def _color_key_background(
     blanket, a pastel prop) is a much larger blob. There's still no way to
     tell the two apart by color alone, so size is the only signal available,
     and a large enclosed blob is left alone rather than risk erasing real
-    content.
+    content. The limit scales with the image's area (default: 0.7%, never
+    under 800px), since the same letter's counter is ten times as many pixels
+    in a 900x1200 frame as in a grid cell a third the width.
 
     Finally, the cut edge is swept outward up to `fringe_width` pixels, to
     catch the anti-aliased blend band around an outline that a tight
@@ -140,6 +144,9 @@ def _color_key_background(
 
     dist = np.abs(rgb - ref_arr).sum(axis=2)
     candidate = dist <= tolerance
+
+    if max_enclosed_size is None:
+        max_enclosed_size = max(800, round(candidate.size * _ENCLOSED_AREA_FRACTION))
 
     labeled, n_components = ndimage.label(candidate, structure=np.ones((3, 3), dtype=int))
     border_labels = set(
