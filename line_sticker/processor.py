@@ -268,10 +268,12 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     """Put a white outline of `radius` px around caption text drawn into the
     artwork (dark lettering above the character).
 
-    The caption is found as the topmost line of dark "ink": dark pixels are
-    smeared sideways so a line of glyphs merges into one blob while the
-    character's own outline below stays separate, and the blob holding the
-    topmost ink is the caption. The outline is painted over decorations
+    The caption is the line of dark "ink" near the top: dark pixels are
+    smeared sideways so glyphs merge into blobs, the biggest short blob in
+    the top third is the caption, and other short blobs on the same rows (a
+    long dash's far side, a dakuten, a detached stroke) are pulled in.
+    Pieces clearly lighter than the lettering (an outlined confetti scrap)
+    are dropped. The outline is painted over decorations
     behind the text (rays, sparkles) but under the text itself, and the
     text's own background-tinted anti-aliased edge is lightened into white
     so no ring of the old background shows between text and outline."""
@@ -292,9 +294,36 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     if len(rows) == 0:
         return img
     smear = ndimage.binary_dilation(ink, structure=np.ones((3, 25), dtype=bool))
-    blobs, _ = ndimage.label(smear, structure=np.ones((3, 3), dtype=int))
-    top_labels = set(np.unique(blobs[rows[0]][ink[rows[0]]])) - {0}
-    text = ndimage.binary_dilation(ink & np.isin(blobs, list(top_labels)), iterations=2) & opaque
+    blobs, blob_count = ndimage.label(smear, structure=np.ones((3, 3), dtype=int))
+    spans = ndimage.find_objects(blobs)
+    height = ink.shape[0]
+    ink_counts = ndimage.sum(ink, blobs, index=np.arange(1, blob_count + 1))
+    # a caption line is short and near the top; the character is far taller
+    short = [i for i, sl in enumerate(spans) if sl[0].stop - sl[0].start < 0.35 * height]
+    candidates = [i for i in short if spans[i][0].start < 0.35 * height]
+    if not candidates:
+        return img
+    main = max(candidates, key=lambda i: ink_counts[i])
+    top, bottom = spans[main][0].start, spans[main][0].stop
+    selected = {main}
+    changed = True
+    while changed:  # pull in the rest of the line: a long dash, a dakuten, a detached stroke
+        changed = False
+        for i in short:
+            if i not in selected and spans[i][0].start <= bottom + 4 and spans[i][0].stop >= top - 4:
+                selected.add(i)
+                top, bottom = min(top, spans[i][0].start), max(bottom, spans[i][0].stop)
+                changed = True
+    caption_ink = ink & np.isin(blobs, [i + 1 for i in selected])
+    # drop pieces clearly lighter than the lettering (outlined confetti caught on the line)
+    pieces, piece_count = ndimage.label(caption_ink, structure=np.ones((3, 3), dtype=int))
+    if piece_count:
+        mean_lum = ndimage.mean(lum, pieces, index=np.arange(1, piece_count + 1))
+        weight = ndimage.sum(caption_ink, pieces, index=np.arange(1, piece_count + 1))
+        order = np.argsort(mean_lum)
+        base = mean_lum[order][np.searchsorted(np.cumsum(weight[order]), weight.sum() / 2)]
+        caption_ink = np.isin(pieces, [i + 1 for i in range(piece_count) if mean_lum[i] <= base + 25])
+    text = ndimage.binary_dilation(caption_ink, iterations=2) & opaque
 
     lighten = np.clip((230 - lum) / 160, 0, 1)[..., None]
     text_rgb = rgb * lighten + 255 * (1 - lighten)
