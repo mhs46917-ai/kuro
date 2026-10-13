@@ -264,6 +264,56 @@ def fit_with_margin(image: Image.Image, canvas_size: tuple[int, int], margin: fl
     return canvas
 
 
+def _caption_line(ink, lum, blobs, spans, short, candidates, ink_counts) -> np.ndarray:
+    """Ink of the caption line: the biggest short blob near the top plus every
+    other short blob on the same rows (a long dash's far side, a dakuten, a
+    detached stroke), minus pieces clearly lighter than the lettering."""
+    main = max(candidates, key=lambda i: ink_counts[i])
+    top, bottom = spans[main][0].start, spans[main][0].stop
+    selected = {main}
+    changed = True
+    while changed:
+        changed = False
+        for i in short:
+            if i not in selected and spans[i][0].start <= bottom + 4 and spans[i][0].stop >= top - 4:
+                selected.add(i)
+                top, bottom = min(top, spans[i][0].start), max(bottom, spans[i][0].stop)
+                changed = True
+    caption_ink = ink & np.isin(blobs, [i + 1 for i in selected])
+    pieces, piece_count = ndimage.label(caption_ink, structure=np.ones((3, 3), dtype=int))
+    if piece_count:
+        mean_lum = ndimage.mean(lum, pieces, index=np.arange(1, piece_count + 1))
+        weight = ndimage.sum(caption_ink, pieces, index=np.arange(1, piece_count + 1))
+        order = np.argsort(mean_lum)
+        base = mean_lum[order][np.searchsorted(np.cumsum(weight[order]), weight.sum() / 2)]
+        caption_ink = np.isin(pieces, [i + 1 for i in range(piece_count) if mean_lum[i] <= base + 25])
+    return caption_ink
+
+
+def _bold_lettering(rgb, lum, opaque) -> np.ndarray:
+    """Very dark strokes too thick to be a character's outline: bold lettering
+    anywhere in the image (big text, text under or beside the character,
+    vertical or two-line captions). Strokes surviving an opening a few px wide
+    are kept if they form a sizeable piece, together with small thick pieces
+    (dakuten, small kana) close to one; round dark eyes are too small and too
+    far from lettering to qualify."""
+    dark = opaque & (lum < 95)
+    r = max(3, round(min(dark.shape) * 0.013))
+    disk = np.hypot(*np.mgrid[-r:r + 1, -r:r + 1]) <= r
+    thick = ndimage.binary_opening(dark, structure=disk)
+    labeled, count = ndimage.label(thick, structure=np.ones((3, 3), dtype=int))
+    if count == 0:
+        return np.zeros_like(dark)
+    sizes = ndimage.sum(thick, labeled, index=np.arange(1, count + 1))
+    big = np.isin(labeled, [i + 1 for i, size in enumerate(sizes) if size >= (5 * r) ** 2])
+    if not big.any():
+        return np.zeros_like(dark)
+    near = ndimage.binary_dilation(big, iterations=6 * r)
+    ids = np.unique(labeled[near & thick])
+    keep = np.isin(labeled, ids[ids > 0])
+    return ndimage.binary_dilation(keep, iterations=r + 2) & dark
+
+
 def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     """Put a white outline of `radius` px around caption text drawn into the
     artwork (dark lettering above the character).
@@ -273,7 +323,9 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     the top third is the caption, and other short blobs on the same rows (a
     long dash's far side, a dakuten, a detached stroke) are pulled in.
     Pieces clearly lighter than the lettering (an outlined confetti scrap)
-    are dropped. The outline is painted over decorations
+    are dropped. Bold lettering found by stroke thickness is added on top, which
+    covers big text, text under or beside the character, and vertical or
+    two-line captions that the line search misses. The outline is painted over decorations
     behind the text (rays, sparkles) but under the text itself, and the
     text's own background-tinted anti-aliased edge is lightened into white
     so no ring of the old background shows between text and outline."""
@@ -290,9 +342,6 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     if count:
         sizes = ndimage.sum(ink, labeled, index=np.arange(1, count + 1))
         ink = np.isin(labeled, [i + 1 for i, size in enumerate(sizes) if size >= 10])
-    rows = np.where(ink.any(axis=1))[0]
-    if len(rows) == 0:
-        return img
     smear = ndimage.binary_dilation(ink, structure=np.ones((3, 25), dtype=bool))
     blobs, blob_count = ndimage.label(smear, structure=np.ones((3, 3), dtype=int))
     spans = ndimage.find_objects(blobs)
@@ -301,28 +350,16 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     # a caption line is short and near the top; the character is far taller
     short = [i for i, sl in enumerate(spans) if sl[0].stop - sl[0].start < 0.35 * height]
     candidates = [i for i in short if spans[i][0].start < 0.35 * height]
-    if not candidates:
+    caption_ink = np.zeros_like(ink)
+    if candidates:
+        caption_ink = _caption_line(ink, lum, blobs, spans, short, candidates, ink_counts)
+    caption_ink = caption_ink | _bold_lettering(rgb, lum, opaque)
+    if not caption_ink.any():
         return img
-    main = max(candidates, key=lambda i: ink_counts[i])
-    top, bottom = spans[main][0].start, spans[main][0].stop
-    selected = {main}
-    changed = True
-    while changed:  # pull in the rest of the line: a long dash, a dakuten, a detached stroke
-        changed = False
-        for i in short:
-            if i not in selected and spans[i][0].start <= bottom + 4 and spans[i][0].stop >= top - 4:
-                selected.add(i)
-                top, bottom = min(top, spans[i][0].start), max(bottom, spans[i][0].stop)
-                changed = True
-    caption_ink = ink & np.isin(blobs, [i + 1 for i in selected])
-    # drop pieces clearly lighter than the lettering (outlined confetti caught on the line)
-    pieces, piece_count = ndimage.label(caption_ink, structure=np.ones((3, 3), dtype=int))
-    if piece_count:
-        mean_lum = ndimage.mean(lum, pieces, index=np.arange(1, piece_count + 1))
-        weight = ndimage.sum(caption_ink, pieces, index=np.arange(1, piece_count + 1))
-        order = np.argsort(mean_lum)
-        base = mean_lum[order][np.searchsorted(np.cumsum(weight[order]), weight.sum() / 2)]
-        caption_ink = np.isin(pieces, [i + 1 for i in range(piece_count) if mean_lum[i] <= base + 25])
+    # grow into the lettering's lighter textured edge (crayon/pencil strokes) so the
+    # outline sits outside the glyph instead of painting over its rim
+    grow = max(4, round(min(ink.shape) * 0.02))
+    caption_ink = ndimage.binary_dilation(caption_ink, iterations=grow, mask=opaque & (lum < 150))
     text = ndimage.binary_dilation(caption_ink, iterations=2) & opaque
 
     lighten = np.clip((230 - lum) / 160, 0, 1)[..., None]
