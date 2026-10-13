@@ -356,15 +356,33 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     caption_ink = caption_ink | _bold_lettering(rgb, lum, opaque)
     if not caption_ink.any():
         return img
-    # grow into the lettering's lighter textured edge (crayon/pencil strokes) so the
-    # outline sits outside the glyph instead of painting over its rim
-    grow = max(4, round(min(ink.shape) * 0.02))
-    caption_ink = ndimage.binary_dilation(caption_ink, iterations=grow, mask=opaque & (lum < 150))
+    # Grow into the rest of the lettering - a crayon stroke's lighter textured rim,
+    # a brush tip the seeds missed - through pixels close to the lettering's own
+    # color, a bounded distance, so it can't run off along a touching character.
+    min_dim = min(ink.shape)
+    seed_rgb = np.median(rgb[caption_ink], axis=0)
+    letter_colored = opaque & ((np.abs(rgb - seed_rgb).sum(axis=2) <= 120) | (lum < 80))
+    caption_ink = ndimage.binary_dilation(
+        caption_ink, iterations=max(6, round(min_dim * 0.035)), mask=letter_colored
+    )
     text = ndimage.binary_dilation(caption_ink, iterations=2) & opaque
 
     lighten = np.clip((230 - lum) / 160, 0, 1)[..., None]
     text_rgb = rgb * lighten + 255 * (1 - lighten)
-    stroke = np.clip(radius + 0.5 - ndimage.distance_transform_edt(~text), 0, 1)
+    smooth = ndimage.binary_closing(np.pad(text, 4), structure=np.ones((5, 5), dtype=bool))[4:-4, 4:-4]
+    stroke = np.clip(radius + 0.5 - ndimage.distance_transform_edt(~smooth), 0, 1)
+
+    # Don't paint over the character itself: thin decorations behind the text
+    # (rays) get outlined over, the character's solid body doesn't.
+    rest = opaque & ~ndimage.binary_dilation(text, iterations=2)
+    parts, part_count = ndimage.label(rest, structure=np.ones((3, 3), dtype=int))
+    if part_count:
+        sizes = ndimage.sum(rest, parts, index=np.arange(1, part_count + 1))
+        character = parts == int(np.argmax(sizes)) + 1
+        r = max(5, round(min_dim * 0.025))
+        disk = np.hypot(*np.mgrid[-r:r + 1, -r:r + 1]) <= r
+        body = ndimage.binary_dilation(ndimage.binary_opening(character, structure=disk), iterations=1) & character
+        stroke = np.where(body, 0, stroke)
 
     out_rgb = rgb * (1 - stroke[..., None]) * a[..., None] + 255 * stroke[..., None]
     out_a = a * (1 - stroke) + stroke
