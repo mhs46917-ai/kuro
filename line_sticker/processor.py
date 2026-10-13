@@ -367,13 +367,9 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     )
     text = ndimage.binary_dilation(caption_ink, iterations=2) & opaque
 
-    lighten = np.clip((230 - lum) / 160, 0, 1)[..., None]
-    text_rgb = rgb * lighten + 255 * (1 - lighten)
-    smooth = ndimage.binary_closing(np.pad(text, 4), structure=np.ones((5, 5), dtype=bool))[4:-4, 4:-4]
-    stroke = np.clip(radius + 0.5 - ndimage.distance_transform_edt(~smooth), 0, 1)
-
-    # Don't paint over the character itself: thin decorations behind the text
-    # (rays) get outlined over, the character's solid body doesn't.
+    # The character's solid body (its largest non-text part after an opening) is
+    # never painted over; thin decorations behind the text (rays) are.
+    body = np.zeros_like(opaque)
     rest = opaque & ~ndimage.binary_dilation(text, iterations=2)
     parts, part_count = ndimage.label(rest, structure=np.ones((3, 3), dtype=int))
     if part_count:
@@ -382,7 +378,40 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
         r = max(5, round(min_dim * 0.025))
         disk = np.hypot(*np.mgrid[-r:r + 1, -r:r + 1]) <= r
         body = ndimage.binary_dilation(ndimage.binary_opening(character, structure=disk), iterations=1) & character
-        stroke = np.where(body, 0, stroke)
+
+    # Everything hugging the lettering - its lighter textured rim, the leftover
+    # background-tinted fringe - belongs inside the outline, otherwise it pokes
+    # out past the white or gets painted white and dents the glyph.
+    hug = max(3, round(min_dim * 0.012))
+    near = ndimage.binary_dilation(text, iterations=hug)
+    cr = 2 * hug
+    cdisk = np.hypot(*np.mgrid[-cr:cr + 1, -cr:cr + 1]) <= cr
+    dents = ndimage.binary_closing(np.pad(text, cr + 1), structure=cdisk)[cr + 1:-cr - 1, cr + 1:-cr - 1]
+    text = text | ((near | dents) & opaque & ~body)
+    # pull in the rest of the glyph's own pixels (a lighter crayon patch at a
+    # stroke end): glyph-dark pixels connected to the lettering, a bounded reach
+    glyphish = opaque & ~body & (lum < 170)
+    text = text | ndimage.binary_dilation(text, iterations=3 * hug, mask=glyphish | text)
+
+    # Pinholes along the lettering's edge (background removal clears the palest
+    # pixels of a crayon rim one by one) would otherwise fill with white and dent
+    # the glyph; give them the nearest lettering pixel's color instead.
+    pinholes = dents & ~opaque & ndimage.binary_dilation(text, iterations=2) & ~body
+    if pinholes.any():
+        _, (iy, ix) = ndimage.distance_transform_edt(~text, return_indices=True)
+        rgb = np.where(pinholes[..., None], rgb[iy, ix], rgb)
+        a = np.where(pinholes, 1.0, a)
+        lum = np.where(pinholes, lum[iy, ix], lum)
+        text = text | pinholes
+
+    # Lighten pixels tinted toward the old (green/mint) background into white,
+    # leaving the lettering's own warm crayon texture alone.
+    tinted = (rgb[..., 1] - rgb[..., 0]) > 2
+    lighten = np.where(tinted, np.clip((230 - lum) / 160, 0, 1), 1.0)[..., None]
+    text_rgb = rgb * lighten + 255 * (1 - lighten)
+    smooth = ndimage.binary_closing(np.pad(text, 4), structure=np.ones((5, 5), dtype=bool))[4:-4, 4:-4]
+    stroke = np.clip(radius + 0.5 - ndimage.distance_transform_edt(~smooth), 0, 1)
+    stroke = np.where(body, 0, stroke)
 
     out_rgb = rgb * (1 - stroke[..., None]) * a[..., None] + 255 * stroke[..., None]
     out_a = a * (1 - stroke) + stroke
