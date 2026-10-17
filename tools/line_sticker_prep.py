@@ -211,13 +211,23 @@ def add_outline(rgba, width, outline_rgb, outline_alpha, glow_rgb, glow_alpha, g
     return Image.alpha_composite(out, canvas)
 
 
-def fit_canvas(rgba, size, margin):
-    """内容を切り詰めて、余白を確保したうえで規定サイズの中央に置く。"""
+def fit_scale(rgba, size, margin):
+    """内容を余白つきで規定サイズに収めるときの拡大率。"""
+    bbox = rgba.split()[3].getbbox()
+    w, h = (bbox[2] - bbox[0], bbox[3] - bbox[1]) if bbox else rgba.size
+    return min((size[0] - margin * 2) / w, (size[1] - margin * 2) / h)
+
+
+def fit_canvas(rgba, size, margin, scale=None):
+    """内容を切り詰めて、余白を確保したうえで規定サイズの中央に置く。
+
+    scale を渡すとその拡大率で置く（--uniform-scale で全コマ共通の倍率を使うため）。
+    """
+    if scale is None:
+        scale = fit_scale(rgba, size, margin)
     bbox = rgba.split()[3].getbbox()
     if bbox:
         rgba = rgba.crop(bbox)
-    tw, th = size[0] - margin * 2, size[1] - margin * 2
-    scale = min(tw / rgba.width, th / rgba.height)
     new = rgba.resize((max(1, round(rgba.width * scale)),
                        max(1, round(rgba.height * scale))), Image.LANCZOS)
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
@@ -268,7 +278,8 @@ def draw_label(canvas, text, font, band_h, stroke, bold=0):
     return canvas
 
 
-def process(panel, args):
+def cut_out(panel, args):
+    """1コマから背景を抜き、縁取りを足した透過画像を返す（まだ規定サイズには置かない）。"""
     panel = inset(panel, args.inset)
     panel = crop_text_band(panel, args.crop_top)
     mask, bg_color = remove_background(panel, args.tolerance)
@@ -288,13 +299,22 @@ def process(panel, args):
         outline_rgb = args.outline_rgb_tuple if args.outline_rgb else OUTLINE_RGB
         rgba = add_outline(rgba, args.outline_width, outline_rgb, args.outline_alpha,
                            GLOW_RGB, args.glow_alpha, args.glow_blur)
+    return rgba
+
+
+def art_size(args):
+    """キャラを置く領域のサイズ。文字帯があればそのぶん縦を詰める。"""
+    return (STICKER_W, STICKER_H - args.text_band) if args.text_band > 0 else (STICKER_W, STICKER_H)
+
+
+def place(rgba, args, scale=None):
     if args.text_band > 0:
         # 文字帯のぶんキャラを上に寄せ、下に余白を確保する
-        art = fit_canvas(rgba, (STICKER_W, STICKER_H - args.text_band), args.margin)
+        art = fit_canvas(rgba, art_size(args), args.margin, scale)
         canvas = Image.new("RGBA", (STICKER_W, STICKER_H), (0, 0, 0, 0))
         canvas.paste(art, (0, 0), art)
         return canvas
-    return fit_canvas(rgba, (STICKER_W, STICKER_H), args.margin)
+    return fit_canvas(rgba, art_size(args), args.margin, scale)
 
 
 def main():
@@ -340,6 +360,9 @@ def main():
     p.add_argument("--no-outline", action="store_true", help="縁取りとシャドウを一切足さない")
     p.add_argument("--keep-all", action="store_true",
                    help="孤立パーツを消さない（効果線を残したいときに使う）")
+    p.add_argument("--uniform-scale", action="store_true",
+                   help="全コマを同じ倍率で置く。コマごとに目いっぱい拡大しないので、"
+                        "グリッド上のキャラの大きさがそのまま揃う")
     args = p.parse_args()
 
     args.outline_rgb_tuple = (tuple(int(v) for v in args.outline_rgb.split(","))
@@ -386,9 +409,15 @@ def main():
                               STICKER_W - 12 - pad,
                               args.text_band - pad - 6)
 
+    cuts = [cut_out(panel, args) for panel in panels]
+    # 既定はコマごとに目いっぱい拡大する。看板や小物で横幅が広いコマほどキャラが小さくなるので、
+    # キャラの大きさを揃えたいときは --uniform-scale で一番きついコマの倍率に全コマを合わせる
+    scale = (min(fit_scale(c, art_size(args), args.margin) for c in cuts)
+             if args.uniform_scale and cuts else None)
+
     covers = []
-    for i, panel in enumerate(panels, 1):
-        out = process(panel, args)
+    for i, rgba in enumerate(cuts, 1):
+        out = place(rgba, args, scale)
         covers.append(out.copy())  # main/tab は文字なしで作る（タブは96x74で文字が潰れる）
         if label_font and i <= len(labels) and labels[i - 1]:
             out = draw_label(out, labels[i - 1], label_font, args.text_band,
