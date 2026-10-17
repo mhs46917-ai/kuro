@@ -70,6 +70,24 @@ _ENCLOSED_AREA_FRACTION = 0.007
 _MIN_FRINGE_TOLERANCE = 90
 
 
+_POCKET_WALL_DISTANCE = 38
+
+
+def _pocket_is_walled(labeled, dist, sl, label) -> bool:
+    """True when an enclosed background-colored pocket is walled in by clearly
+    different color (a letter's counter, a mug handle's hole: the ring around
+    it sits far from the background color). Specks of a flat fill that is
+    merely close to the background - a grey stone on a mint ground, where JPEG
+    noise dips a few pixels under `tolerance` - are surrounded by that same
+    near-background fill and are left alone."""
+    pad = 3
+    y0, x0 = max(0, sl[0].start - pad), max(0, sl[1].start - pad)
+    y1, x1 = sl[0].stop + pad, sl[1].stop + pad
+    window = labeled[y0:y1, x0:x1] == label
+    ring = ndimage.binary_dilation(window, iterations=pad) & ~window
+    return bool(ring.any()) and float(np.median(dist[y0:y1, x0:x1][ring])) >= _POCKET_WALL_DISTANCE
+
+
 def _color_key_background(
     image: Image.Image,
     tolerance: int,
@@ -157,7 +175,13 @@ def _color_key_background(
 
     sizes = ndimage.sum(candidate, labeled, index=np.arange(1, n_components + 1)) if n_components else np.array([])
     removable_labels = set(border_labels)
-    removable_labels.update(i + 1 for i, size in enumerate(sizes) if size <= max_enclosed_size)
+    slices = ndimage.find_objects(labeled) if n_components else []
+    for i, size in enumerate(sizes):
+        label = i + 1
+        if label in border_labels or size > max_enclosed_size:
+            continue
+        if _pocket_is_walled(labeled, dist, slices[i], label):
+            removable_labels.add(label)
     is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
 
     fringe_limit = min(fringe_tolerance, float(np.abs(255.0 - ref_arr).sum()) / 2)
