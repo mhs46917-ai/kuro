@@ -71,6 +71,8 @@ _MIN_FRINGE_TOLERANCE = 90
 
 
 _POCKET_WALL_DISTANCE = 38
+_BIG_POCKET_AREA_FRACTION = 0.08
+_BIG_POCKET_MEAN_DISTANCE = 15
 
 
 def _pocket_is_walled(labeled, dist, sl, label) -> bool:
@@ -178,8 +180,17 @@ def _color_key_background(
     slices = ndimage.find_objects(labeled) if n_components else []
     for i, size in enumerate(sizes):
         label = i + 1
-        if label in border_labels or size > max_enclosed_size:
+        if label in border_labels:
             continue
+        if size > max_enclosed_size:
+            # A big pocket is still background when it is the background's own
+            # flat color and walled in (the inside of a heart wreath); a big
+            # blob that merely sits near it (a pastel fill) is not.
+            if size > _BIG_POCKET_AREA_FRACTION * candidate.size:
+                continue
+            sl = slices[i]
+            if float(dist[sl][labeled[sl] == label].mean()) > _BIG_POCKET_MEAN_DISTANCE:
+                continue
         if _pocket_is_walled(labeled, dist, slices[i], label):
             removable_labels.add(label)
     is_background = np.isin(labeled, list(removable_labels)) if removable_labels else np.zeros_like(candidate)
