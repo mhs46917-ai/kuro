@@ -363,6 +363,9 @@ def main():
     p.add_argument("--uniform-scale", action="store_true",
                    help="全コマを同じ倍率で置く。コマごとに目いっぱい拡大しないので、"
                         "グリッド上のキャラの大きさがそのまま揃う")
+    p.add_argument("--cell-scale", action="store_true",
+                   help="コマ全体がスタンプに収まる倍率で置く。コマの中でキャラが占める割合が"
+                        "そのまま残るので、参照画像と同じ小ささで仕上げたいときに使う")
     args = p.parse_args()
 
     args.outline_rgb_tuple = (tuple(int(v) for v in args.outline_rgb.split(","))
@@ -414,6 +417,11 @@ def main():
     # キャラの大きさを揃えたいときは --uniform-scale で一番きついコマの倍率に全コマを合わせる
     scale = (min(fit_scale(c, art_size(args), args.margin) for c in cuts)
              if args.uniform_scale and cuts else None)
+    if args.cell_scale and cuts:
+        # 余白を切り詰める前のコマ全体を基準にする。キャラがコマの4割なら、スタンプでも4割になる
+        aw, ah = art_size(args)
+        scale = min(min((aw - args.margin * 2) / c.width, (ah - args.margin * 2) / c.height)
+                    for c in cuts)
 
     covers = []
     for i, rgba in enumerate(cuts, 1):
