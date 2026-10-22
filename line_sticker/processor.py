@@ -350,7 +350,7 @@ def _bold_lettering(rgb, lum, opaque) -> np.ndarray:
     return ndimage.binary_dilation(keep, iterations=r + 2) & dark
 
 
-def outline_caption(image: Image.Image, radius: float) -> Image.Image:
+def outline_caption(image: Image.Image, radius: float, bold_text: bool = True) -> Image.Image:
     """Put a white outline of `radius` px around caption text drawn into the
     artwork (dark lettering above the character).
 
@@ -364,7 +364,10 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     two-line captions that the line search misses. The outline is painted over decorations
     behind the text (rays, sparkles) but under the text itself, and the
     text's own background-tinted anti-aliased edge is lightened into white
-    so no ring of the old background shows between text and outline."""
+    so no ring of the old background shows between text and outline.
+
+    `bold_text=False` skips the thick-stroke search, for characters with big
+    dark patches (pug ears and face) that it would take for lettering."""
     img = image.convert("RGBA")
     pad = int(np.ceil(radius)) + 2
     padded = Image.new("RGBA", (img.width + 2 * pad, img.height + 2 * pad), (0, 0, 0, 0))
@@ -389,7 +392,8 @@ def outline_caption(image: Image.Image, radius: float) -> Image.Image:
     caption_ink = np.zeros_like(ink)
     if candidates:
         caption_ink = _caption_line(ink, lum, blobs, spans, short, candidates, ink_counts)
-    caption_ink = caption_ink | _bold_lettering(rgb, lum, opaque)
+    if bold_text:
+        caption_ink = caption_ink | _bold_lettering(rgb, lum, opaque)
     if not caption_ink.any():
         return img
     # Grow into the rest of the lettering - a crayon stroke's lighter textured rim,

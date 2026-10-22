@@ -79,6 +79,9 @@ def _parse_text_specs(specs: tuple[str, ...]) -> dict[int, str]:
                    "empty on every side (e.g. 0.23).")
 @click.option("--text-outline", type=float, default=0, show_default=True,
               help="White outline (px at sticker size) around caption text already drawn into the artwork.")
+@click.option("--no-bold-text", "no_bold_text", is_flag=True, default=False,
+              help="With --text-outline, find captions only as the line of text near the top; skip the "
+                   "thick-dark-stroke search, which mistakes big dark patches (pug ears and face) for text.")
 @click.option("--keep-dir", type=click.Path(path_type=Path), default=None,
               help="Also keep the generated PNGs in this directory (in addition to the ZIP).")
 @click.option("--text", "text_specs", multiple=True,
@@ -106,6 +109,7 @@ def process(
     crop_to_content_flag: bool,
     margin: float | None,
     text_outline: float,
+    no_bold_text: bool,
     keep_dir: Path | None,
     text_specs: tuple[str, ...],
     font_path: Path | None,
@@ -160,7 +164,7 @@ def process(
             else:
                 box_w, box_h = STICKER_MAX_SIZE
             scale = min(box_w / img.width, box_h / img.height)
-            img = outline_caption(img, text_outline / scale)
+            img = outline_caption(img, text_outline / scale, bold_text=not no_bold_text)
         return img
 
     click.echo(f"Processing {len(images)} sticker(s)...")
