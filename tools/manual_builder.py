@@ -131,7 +131,14 @@ def build_markdown(manual):
         num = step_number(i)
         out += [f'### 手順{num} {step["title"]}', ""]
         out += [_plain(l) for l in step["lines"]]
-        out += ["", f'![{step["title"]}](images/{slug}/{step["image"]})', "", "---", ""]
+        out.append("")
+        if step.get("images"):
+            for item in step["images"]:
+                cap = item.get("caption", step["title"])
+                out += [f'![{cap}](images/{slug}/{item["image"]})', ""]
+        else:
+            out += [f'![{step["title"]}](images/{slug}/{step["image"]})', ""]
+        out += ["---", ""]
 
     if manual.get("checklist"):
         n += 1
@@ -172,6 +179,8 @@ def _styles(font):
                                 textColor=colors.white),
         "note": ParagraphStyle("n", fontName=font, fontSize=9, leading=14,
                                textColor=colors.HexColor("#8a1c12")),
+        "cap": ParagraphStyle("cp", fontName=font, fontSize=9, leading=12,
+                              alignment=1, textColor=colors.HexColor("#1f3a5f")),
     }
 
 
@@ -385,19 +394,47 @@ def build_pdf(manual):
     for i, step in enumerate(manual["steps"]):
         head = _bar(f'{step_number(i)}　{step["title"]}', st["steph"])
         text = [Paragraph(l, st["body"]) for l in step["lines"]]
-        photo = _fit_image(os.path.join(imgdir, step["image"]), img_w - 4 * mm, img_h)
-        inner = Table([[text, photo]], colWidths=[txt_w, img_w])
-        inner.setStyle(TableStyle([
-            ("VALIGN", (0, 0), (0, 0), "TOP"),
-            ("VALIGN", (1, 0), (1, 0), "MIDDLE"),
-            ("ALIGN", (1, 0), (1, 0), "CENTER"),
-            ("LEFTPADDING", (0, 0), (0, 0), 2 * mm),
-            ("RIGHTPADDING", (0, 0), (0, 0), 3 * mm),
-            ("TOPPADDING", (0, 0), (-1, -1), 2.5 * mm),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5 * mm),
-            ("BOX", (0, 0), (-1, -1), 0.5, LINE),
-            ("LINEBEFORE", (1, 0), (1, 0), 0.5, LINE),
-        ]))
+        h = step.get("image_height_mm", manual.get("image_max_height_mm", 62)) * mm
+
+        if step.get("images"):
+            # 写真2枚を横並び。説明文は上に全幅で置く
+            n = len(step["images"])
+            cell = FRAME_W / n
+            photos, caps = [], []
+            for item in step["images"]:
+                photos.append(_fit_image(os.path.join(imgdir, item["image"]),
+                                         cell - 10 * mm, h))
+                caps.append(Paragraph(item.get("caption", ""), st["cap"]))
+            grid = Table([photos, caps], colWidths=[cell] * n)
+            grid.setStyle(TableStyle([
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("VALIGN", (0, 0), (-1, 0), "MIDDLE"),
+                ("TOPPADDING", (0, 0), (-1, 0), 0),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 1.5 * mm),
+                ("TOPPADDING", (0, 1), (-1, 1), 0),
+            ]))
+            inner = Table([[text], [grid]], colWidths=[FRAME_W])
+            inner.setStyle(TableStyle([
+                ("LEFTPADDING", (0, 0), (-1, -1), 3 * mm),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 3 * mm),
+                ("TOPPADDING", (0, 0), (-1, 0), 2.5 * mm),
+                ("BOTTOMPADDING", (0, 1), (-1, 1), 2.5 * mm),
+                ("BOX", (0, 0), (-1, -1), 0.5, LINE),
+            ]))
+        else:
+            photo = _fit_image(os.path.join(imgdir, step["image"]), img_w - 4 * mm, h)
+            inner = Table([[text, photo]], colWidths=[txt_w, img_w])
+            inner.setStyle(TableStyle([
+                ("VALIGN", (0, 0), (0, 0), "TOP"),
+                ("VALIGN", (1, 0), (1, 0), "MIDDLE"),
+                ("ALIGN", (1, 0), (1, 0), "CENTER"),
+                ("LEFTPADDING", (0, 0), (0, 0), 2 * mm),
+                ("RIGHTPADDING", (0, 0), (0, 0), 3 * mm),
+                ("TOPPADDING", (0, 0), (-1, -1), 2.5 * mm),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5 * mm),
+                ("BOX", (0, 0), (-1, -1), 0.5, LINE),
+                ("LINEBEFORE", (1, 0), (1, 0), 0.5, LINE),
+            ]))
         story.append(KeepTogether([head, inner, Spacer(1, 4 * mm)]))
 
     if manual.get("checklist"):
@@ -450,8 +487,13 @@ def validate(manual):
                 if step.get("image"):
                     targets.append((f'{page["side"]}手順{i}', step["image"]))
     else:
-        targets = [(f"手順{step_number(i)}", step["image"])
-                   for i, step in enumerate(manual["steps"])]
+        targets = []
+        for i, step in enumerate(manual["steps"]):
+            label = f"手順{step_number(i)}"
+            if step.get("images"):
+                targets += [(label, it["image"]) for it in step["images"]]
+            else:
+                targets.append((label, step["image"]))
     for label, name in targets:
         used.add(name)
         p = os.path.join(imgdir, name)
