@@ -16,6 +16,7 @@
 | `tools/jp_font.py` | 日本語フォントのOS別自動検出 |
 | `tools/annotate_image.py` | 写真に番号マーカーと引き出し線を焼き込む（全体図の説明用） |
 | `tools/redraw_display.py` | 計器の7セグメント数値をマニュアル記載値に描き直す |
+| `tools/make_board_template.py` | ホワイトボード用の記録枠を生成（`--width/--height/--rows`） |
 
 ## 新しいマニュアルを作るときの手順
 

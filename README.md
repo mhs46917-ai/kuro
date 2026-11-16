@@ -10,6 +10,7 @@
 | リセナ立ち上げ（A4両面1枚） | [md](docs/リセナ立ち上げ.md) | [pdf](docs/リセナ立ち上げ.pdf) |
 | 水抜き機械室操作 | [md](docs/水抜き機械室操作.md) | [pdf](docs/水抜き機械室操作.pdf) |
 | 冬季熱交換器操作 | [md](docs/冬季熱交換器操作.md) | [pdf](docs/冬季熱交換器操作.pdf) |
+| ホワイトボード記入レイアウト（記録用紙） | — | [pdf](docs/ホワイトボード記入レイアウト.pdf) |
 
 ## セットアップ（初回のみ）
 
@@ -38,6 +39,17 @@ python3 tools/build_manual.py backwash
 ```
 
 生成物は `docs/<タイトル>.md` と `docs/<タイトル>.pdf` に出ます。
+
+## ホワイトボードの記録用紙
+
+プール水温とバルブ操作を1日分記録する枠を生成します。既定はA3縦・8行。
+
+```bash
+python3 tools/make_board_template.py                        # A3縦・8行
+python3 tools/make_board_template.py --width 450 --height 600 --rows 10
+```
+
+ボードの実寸に合わせたいときは `--width` / `--height` にmmを指定してください。
 
 ## 既存マニュアルを直す
 
